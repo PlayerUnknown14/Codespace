@@ -1,3 +1,5 @@
+#Вычисление кубического уравнения по формуле Кардано
+
 import cmath
 
 def check():
@@ -24,7 +26,7 @@ if q == 0:
 if q < 0:
     F = cmath.atan(-2 * cmath.sqrt(-Q) / q)
 if q > 0:
-    F = cmath.atan(-2 * cmath.sqrt(-Q) / q) + cmath.pi
+    F = cmath.atan(-2 * cmath.sqrt(-Q) / q) + cmath.piФ
         
 if Q < 0:
     x1 = 2 * (-p / 3)**0.5 * cmath.cos(F / 3) - b / (3 * a)
