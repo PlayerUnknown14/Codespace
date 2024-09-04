@@ -1,4 +1,4 @@
-def Check():
+def check():
     while True:
         try:
             print("Введите коэффиценты")
@@ -8,7 +8,7 @@ def Check():
             print("Коэффиценты введены неверно")
     return a, b, c, d
 
-a, b, c, d = Check()
+a, b, c, d = check()
 
 def sign(x):  
     if x>0:
