@@ -10,6 +10,9 @@ def check():
 
 a, b, c, d = check()
 
+#Решение взято на подобие библиотеки numpy
+#https://www.cyberforum.ru/python-tasks/thread2874633.html
+
 def sign(x):  
     if x>0:
         return 1
