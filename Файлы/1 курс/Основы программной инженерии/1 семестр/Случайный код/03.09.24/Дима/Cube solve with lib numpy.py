@@ -15,4 +15,6 @@ def check():
 
 a, b, c, d = check()
 x = Polynomial([a,b,c,d])
+x_mass = []
+print(x)
 print(x.roots())
