@@ -58,3 +58,4 @@ elif Q > 0:
     x3 = y3 - b / (3 * a)
     x3 = round(x3.real, 5) + round(x3.imag, 5) * 1j
     print('\nalfa =', alfa, '\nbeta =', beta, '\n\nx1 =', x1, '\nx2 =', x2, '\nx3 =', x3)
+    
