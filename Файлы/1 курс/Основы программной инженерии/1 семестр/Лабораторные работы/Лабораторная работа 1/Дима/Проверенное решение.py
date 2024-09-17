@@ -1,5 +1,7 @@
 from cmath import *
 
+errormax = 1.0e-12
+errormaxcomplex = 1.0e-12*1j
 
 def cbrt(polynomial):
     solution = set()
@@ -36,7 +38,7 @@ def quadratic(a, b, c):
 
 
 def cubic(a, b, c, d):
-    solutions = set()
+    solutions = []
     if a != 0:
         p = (3 * a * c - b ** 2) / (3 * a ** 2)
         q = (2 * b ** 3 - 9 * a * b * c + 27 * a ** 2 * d) / (27 * a ** 3)
@@ -46,13 +48,27 @@ def cubic(a, b, c, d):
             for j in beta:
                 if abs((i * j) + p / 3) <= 0.0001:
                     x = i + j - b / (3 * a)
-                    solutions.add(x)
+                    solutions.append(x)
     else:
         solutions.update(quadratic(b, c, d))
     return solutions
 
 
 print('ax^3+bx^2+cx+d=0')
-a, b, c, d = map(complex, input().split())
+def check():
+    while True:
+        try:
+            print("Введите коэффиценты")
+            a, b, c, d = map(float, input().split())
+            5/a, 5/b, 5/c, 5/d
+            break
+        except ValueError:
+            print("Коэффиценты введены неверно")
+        except ZeroDivisionError:
+            print("Коэффиценты не могут быть равны нулю")
+    return a, b, c, d
 
+a, b, c, d = check()
 print(cubic(a, b, c, d))
+amass = cubic(a,b,c,d)
+print(amass[1])
