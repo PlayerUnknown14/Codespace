@@ -16,7 +16,7 @@ def check():
     return a, b, c, d
 
 a, b, c, d = check()
-
+maxerror = 1.0e-12
 
 #Вычисление корней кубического уравнения по формуле Кардано
 #http://surl.li/jltmfa
@@ -34,17 +34,30 @@ if q > 0:
         
 if Q < 0:
     x1 = 2 * (-p / 3)**0.5 * cmath.cos(F / 3) - b / (3 * a)
-    x1 = round(x1.real, 5) 
+    
     x2 = 2 * (-p / 3)**0.5 * cmath.cos((F / 3) + 2 * cmath.pi / 3) - b / (3 * a)
-    x2 = round(x2.real, 5)
+    
     x3 = 2 * (-p / 3)**0.5 * cmath.cos((F / 3) + 4 * cmath.pi / 3) - b / (3 * a)
-    x3 = round(x3.real, 5) 
+    
+    Ans1 = a*x1**3+b*x1**2+c*x1+d
+    Ans2 = a*x2**3+b*x2**2+c*x2+d
+    Ans3 = a*x3**3+b*x3**2+c*x3+d
     print('\nx1 =', x1, '\nx2 =', x2, '\nx3 =', x3)
+    print('Уравнение с первым корнем = ',Ans1)
+    print('Уравнение со вторым корнем = ',Ans2)
+    print('Уравнение с третьим корнем = ',Ans3)
+    
 elif Q == 0:
     x1 = 2 * (-q / 2) ** (1 / 3) - b / (3 * a)
     x2 = (-q / 2) ** (-1 / 3) - b / (3 * a)
     x3 = (-q / 2) ** (-1 / 3) - b / (3 * a)
     print('\nx1 =', x1, '\nx2 =', x2, '\nx3 =', x3)
+    Ans1 = a*x1**3+b*x1**2+c*x1+d
+    Ans2 = a*x2**3+b*x2**2+c*x2+d
+    Ans3 = a*x3**3+b*x3**2+c*x3+d
+    print('Уравнение с первым корнем = ',Ans1)
+    print('Уравнение со вторым корнем = ',Ans2)
+    print('Уравнение с третьим корнем = ',Ans3)
 elif Q > 0:
     alfa = (-q / 2 + Q ** 0.5) ** (1 / 3)
     beta = -abs((-q / 2 - Q ** 0.5) ** (1 / 3))
@@ -52,10 +65,14 @@ elif Q > 0:
     y2 = complex(-((alfa + beta) / 2), (alfa - beta) / 2 * 3 ** 0.5)
     y3 = complex(-((alfa + beta) / 2), -(alfa - beta) / 2 * 3 ** 0.5)
     x1 = y1 - b / (3 * a)
-    x1 = round(x1, 5)
     x2 = y2 - b / (3 * a)
-    x2 = round(x2.real, 5) + round(x2.imag, 5) * 1j
+    x2 = x2.real + x2.imag * 1j
     x3 = y3 - b / (3 * a)
-    x3 = round(x3.real, 5) + round(x3.imag, 5) * 1j
+    x3 = x3.real + x3.imag * 1j
+    Ans1 = a*x1**3+b*x1**2+c*x1+d
+    Ans2 = a*x2**3+b*x2**2+c*x2+d
+    Ans3 = a*x3**3+b*x3**2+c*x3+d
     print('\nalfa =', alfa, '\nbeta =', beta, '\n\nx1 =', x1, '\nx2 =', x2, '\nx3 =', x3)
-    
+    print('Уравнение с первым корнем = ',Ans1)
+    print('Уравнение со вторым корнем = ',Ans2)
+    print('Уравнение с третьим корнем = ',Ans3)
