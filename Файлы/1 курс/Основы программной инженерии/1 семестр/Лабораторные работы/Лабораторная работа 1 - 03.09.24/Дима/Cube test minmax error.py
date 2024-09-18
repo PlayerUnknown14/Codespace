@@ -2,9 +2,10 @@ from random import *
 import cmath
 from cmath import*
 
-korni = []
+proverka = []
 
 for i in range(100):
+    #Рандомный выбор значения для коэффицента с исключением нуля
     a = choice((randint(-10,-1),randint(1,11)))
     b = choice((randint(-10,-1),randint(1,11)))
     c = choice((randint(-10,-1),randint(1,11)))
@@ -61,12 +62,20 @@ for i in range(100):
         return solutions
 
     amass = cubic(a,b,c,d)
+    #Подстановка корней в уравнение (ax^3+bx^2+cx+d = 0)
     ans1 = a*amass[0]**3+b*amass[0]**2+c*amass[0]+d
     ans2 = a*amass[1]**3+b*amass[1]**2+c*amass[1]+d
     ans3 = a*amass[2]**3+b*amass[2]**2+c*amass[2]+d
-    ansfloat = float(ans2.real)
-    korni.append(abs(ansfloat))
-print(max(korni))
+    #Перевод из complex в float
+    ansfloat1 = float(ans1.real)
+    ansfloat2 = float(ans2.real)
+    ansfloat3= float(ans3.real)
+    #Занесение значений, полученных после подстановки, в массив
+    proverka.append(abs(ansfloat1))
+    proverka.append(abs(ansfloat2))
+    proverka.append(abs(ansfloat3))
+#Вывод максимального числа массива (для нахождения границы погрешности)
+print(max(proverka))
     
 # Минимальное число - 1.0e-10
 # Брать границу величиной в 1.0e-9

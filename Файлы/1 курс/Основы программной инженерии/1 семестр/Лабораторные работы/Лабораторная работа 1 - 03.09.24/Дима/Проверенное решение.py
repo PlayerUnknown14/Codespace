@@ -1,8 +1,5 @@
 from cmath import *
 
-errormax = 1.0e-12
-errormaxcomplex = 1.0e-12*1j
-
 def cbrt(polynomial):
     solution = set()
     root1 = polynomial ** (1 / 3)
@@ -73,14 +70,16 @@ a, b, c, d = check()
 
 print('Корни уравнения: ',cubic(a, b, c, d))
 amass = cubic(a,b,c,d)
+#Подстановка корней в уравнение (ax^3+bx^2+cx+d = 0)
 ans1 = a*amass[0]**3+b*amass[0]**2+c*amass[0]+d
 ans2 = a*amass[1]**3+b*amass[1]**2+c*amass[1]+d
 ans3 = a*amass[2]**3+b*amass[2]**2+c*amass[2]+d
+#Перевод из complex в float
 ansfloat1 = float(ans1.real)
 ansfloat2 = float(ans2.real)
 ansfloat3 = float(ans3.real)
 print('Значения уравнения с подставленными корнями: ',ansfloat1,ansfloat2,ansfloat3)
-
+#Проверка подстановленных корней в уравнение. Граница погрешности найдена в файле "Cube test minmax error"
 if ansfloat1 < 1.0e-9:
     print("Первый корень прошёл проверку при максимальной границе в 1.0e-9")
 else:
