@@ -36,7 +36,7 @@ def solve_cubic(a, b, c, d):
         y2 = complex(-((Alfa + Beta) / 2), (Alfa - Beta) / 2 * 3 ** 0.5)
         y3 = complex(-((Alfa + Beta) / 2), -(Alfa - Beta) / 2 * 3 ** 0.5)
         x1 = y1 - b / (3 * a)
-        x1 = round(x1, 5)
+        x1 = round(x1.real, 5)
         x2 = y2 - b / (3 * a)
         x2 = round(x2.real, 5) + round(x2.imag, 5) * 1j
         x3 = y3 - b / (3 * a)
@@ -62,9 +62,15 @@ x1, x2, x3 = solve_cubic(a, b, c, d)
 print(f"\n\nКорни уравнения: {x1}; {x2}; {x3}")
 
 #Проверяем найденные корни, подставляя их в уравнение
-if (a * x1**3 + b * x1**2 + c * x1 + d) == 0\
+if      (a * x1**3 + b * x1**2 + c * x1 + d) == 0\
     and (a * x2**3 + b * x2**2 + c * x2 + d) == 0\
     and (a * x3**3 + b * x3**2 + c * x3 + d) == 0:
-    print("Проверка корней, корни подходят.")
+        print("Проверка корней, корни подходят.")
+        print(a * x1**3 + b * x1**2 + c * x1 + d)
+        print(a * x2**3 + b * x2**2 + c * x2 + d)
+        print(a * x3**3 + b * x3**2 + c * x3 + d)
 else:
     print("Проверка корней, корни не подходят.")
+    print(a * x1**3 + b * x1**2 + c * x1 + d)
+    print(a * x2**3 + b * x2**2 + c * x2 + d)
+    print(a * x3**3 + b * x3**2 + c * x3 + d)
