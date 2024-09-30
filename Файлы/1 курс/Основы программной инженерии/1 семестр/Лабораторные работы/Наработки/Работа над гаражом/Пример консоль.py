@@ -22,7 +22,7 @@ class Garage():
         print(lst)
         for i in range(0,len(lst)):
             lst[i]=lst[i]+' '
-        with open('garage1.txt', 'w') as f:
+        with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt', 'w') as f:
             f.writelines(lst)
     def izm(self):
         par = input('Какой параметр хотите изменить.\n')
@@ -72,7 +72,7 @@ class Garage():
             lst[j1+5]=self.Type_of_engine
         for i in range(0,len(lst)):
             lst[i]=lst[i]+' '
-        with open('garage1.txt', 'w') as f:
+        with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt', 'w') as f:
             f.writelines(lst)
 while True:
     d=input('1.Добавить машину\n2.Удалить машину\n3.Изменить машину\n4.Вывести список машин\n5.Выполнить поиск\n6.Выйти из проги\nВведите номер действия:\n')
@@ -85,7 +85,7 @@ while True:
             v = []
             for i in range(0, 100):
                 v=v+[str(i)]
-            with open (r'C:\Users\luvid\OneDrive\Desktop\python\random\garage1.txt','r') as f:
+            with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt','r') as f:
                 x=f.read()
             reg = input('Регистрационный номер:\n')
             while c == 0:
@@ -116,10 +116,10 @@ while True:
             t.add_row(list_gar)
             print(t)
             list_gar = [reg,' ', car,' ', door,' ', light,' ', color,' ', engine,' ']
-            with open ('garage1.txt','a') as f:
+            with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt','a') as f:
                 f.writelines(list_gar)
         if d == 2:
-            with open('garage1.txt', 'r') as f:
+            with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt', 'r') as f:
                 x = f.read()
             lst = x.split()
             from prettytable import PrettyTable
@@ -149,7 +149,7 @@ while True:
             if c == 0:
                 print('Машины с таким регестрационным номером нет.\n')
         if d == 3:
-            with open('garage1.txt', 'r') as f:
+            with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt', 'r') as f:
                 x = f.read()
             lst = x.split()
             from prettytable import PrettyTable
@@ -182,7 +182,7 @@ while True:
             from prettytable import PrettyTable
             t = PrettyTable(['Номер ', 'Марка ', 'Модель ', 'Тонировка ', 'Цвет ', 'Тип_двигателя '])
             t.padding_width = 1
-            with open('garage1.txt', 'r') as f:
+            with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt', 'r') as f:
                 x = f.read()
             lst = x.split()
             i = (len(lst) + 1) / 6
@@ -194,7 +194,7 @@ while True:
                 m = m + 6
             print(t)
         if d == 5:
-            with open('garage1.txt', 'r') as f:
+            with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt', 'r') as f:
                 x = f.read()
             lst = x.split()
             from prettytable import PrettyTable
