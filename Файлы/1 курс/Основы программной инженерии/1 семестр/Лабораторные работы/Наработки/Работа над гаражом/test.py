@@ -1,91 +1,136 @@
-from prettytable import *
-table = PrettyTable()
-table.field_names = ['Mark', 'Model','Year of model', 'Colour', 'HP', 'Car mileage']
-mark = ''
-model = ''
-yearofmodel = ''
-colour = ''
-hp = ''
+#ТЗ: создать приложение - таблица, содержащая в себе характеристики различных автомобилей. Возможность изменять данные в таблице. Использовать фреймворки в коде
 
-def dobavl():
-    mark = input('Введите марку: ')
-    model = input('Введите модель: ')
-    yearofmodel = input('Введите год выпуска авто: ')
-    colour = input('Введите цвет: ')
-    hp = input('Введите лошадиные силы: ')
-    carmile = input('Введите пробег авто: ')
-    return mark, model, yearofmodel, colour, hp, carmile
+from prettytable import PrettyTable
 
-def clear():
-    mark = ''
-    model = ''
-    yearofmodel = ''
-    colour = ''
-    hp = ''
-    return mark, model, yearofmodel, colour, hp, carmile
-def delete(self):
-    self.Number = ''
-    self.Brand = ''
-    self.Model = ''
-    self.Ton = ''
-    self.Color = ''
-    self.Type_of_engine = ''
-    list[j1] = self.Number
-    list[j1 + 1]= self.Brand
-    list[j1 + 2]=self.Model
-    list[j1 + 3]=self.Ton
-    list[j1 + 4]=self.Color
-    list[j1 + 5]=self.Type_of_engine
-    print(list)
-    for i in range(0,len(list)):
-        list[i]=list[i]+' '
-    with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt', 'w') as f:
-        f.writelines(list)
-def change():
-    return 0
+class garage():
+    def __init__(self, number, mark, model, yearofmodel, color, hp):
+        self.number = number
+        self.mark = mark
+        self.model = model
+        self.yearofmodel = yearofmodel
+        self.color = color
+        self.hp = hp
+    def change(self):
+        par = input("Введите параметр, что хотите изменить: ")
+        match par.split():
+            case ["Номер"]:
+                inp = input("Введите изменённый номер автомобиля: ")
+                while True:
+                    if num in S:
+                        inp = input("Номер уже находится в базе данных. Введите другой номер: ") 
+                    else:
+                        break
+                self.number = inp
+                S[first] = self.number
+            case ["Марка"]:
+                imp = input('Введите изменённую марку автомобиля: ')
+                self.mark = imp
+                S[first+1] = self.mark
+            case ["Модель"]:
+                imp = input('Введите изменённую модель автомобиля: ')
+                self.model = imp
+                S[first+2] = self.model
+            case ["Год выпуска"]:
+                inp = input("Введите изменённый год выпуска: ")
+                while True:
+                    if inp != "1" and inp != "2" and inp != "3":
+                        print("Введено неправильное значение.\n")
+                        inp = input("Введите новый тип двигателя автомобиля - \
+                                     внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
+                    else:
+                        break
+                if inp == "1": inp = "Внутреннего сгорания"
+                elif inp == "2": inp = "Электродвигатель"
+                elif inp == "3": inp = "Гибридный"
+                self.yearofmodel = inp
+                S[first+3] = self.yearofmodel
+            case ["Цвет"]:
+                imp = input('Введите новый цвет автомобиля: \n')
+                self.color = imp
+                S[first+4] = self.color
+            case ["Мощность"]:
+                imp = input('Введите новое значение мощности двигателя автомобиля: \n')
+                self.hp = imp
+                S[first+5] = self.hp
+                
+        for i in range(0,len(S)):
+            S[i]=S[i]+' '
+        with open('cars_table.txt', 'w') as f:
+            f.writelines(S)
+    def delete(self):
+        self.number = ''
+        self.mark = ''
+        self.model = ''
+        self.yearofmodel = ''
+        self.color = ''
+        self.hp = ''
+        S[first] = self.number
+        S[first + 1]= self.mark
+        S[first + 2]=self.model
+        S[first + 3]=self.yearofmodel
+        S[first + 4]=self.color
+        S[first + 5]=self.hp
+        print(S)
+        for i in range(0,len(S)):
+            S[i]=S[i]+' '
+        with open('cars_table.txt', 'w') as f:
+            f.writelines(S)
 
 while True:
-    deystv = input('1. Добавить автомобиль\n2.Редактировать автомобиль\n3. Удалить автомобиль\n0. Завершить программу\nВведите число 0-3 для выполнения действий:  ')
-    if deystv!="0" and deystv!="1" and deystv!="2" and deystv!="3":
-        print('Число введено неверно. Такого действия нет')
-    if deystv == "1":
-        mark, model, yearofmodel, colour, hp, carmile = dobavl()
-        table.add_row([mark, model, yearofmodel, colour, hp, carmile])
-        mark, model, yearofmodel, colour, hp, carmile = clear()
-        print(table)
-    if deystv == "3":
-        print(table)
-        with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Наработки\Работа над гаражом\garage.txt', 'r') as f:
-            x = f.read()
-        list = x.split()
-        t = PrettyTable(['Номер ', 'Марка ', 'Модель ', 'Тонировка ', 'Цвет ', 'Тип_двигателя '])
-        t.padding_width = 1
-        i = (len(lst) + 1) / 6
-        j = 0
-        m = 6
-        for i1 in range(0, int(i)):
-            t.add_row(lst[j:m])
-            j = j + 6
-            m = m + 6
-        print(t)
-        j=0
-        m=6
-        c=0
-        b=input('Введите номер строки машины, которую хотите удалить: ')
-        for i1 in range(0, int(i)):
-            try:
-                c=1
-            j1=j
-            j = j + 6
-            m = m + 6
-        if c == 1:
-            gar = Garage(lst[j1],lst[j1+1],lst[j1+2],lst[j1+3],lst[j1+4],lst[j1+5])
-            gar.delete()
-        if c == 0:
-            print('Машины с таким регестрационным номером нет.\n')
-        try:
-            delete(nor)
-        except IndexError:
-            print("Машины с таким номером в списке нет")
-    if deystv == "0":
-        break
+    option = input("Выберите нужную опцию:\n\n\t1. Вывести таблицу\n\t2. Добавить автомобиль\n\t3. Изменить автомобить\n\t4. Удалить автомобиль\n\t5. Найти автомобиль в таблице\n\t6. Закрыть программу\n")
+    match option.split():
+        case ["1"]:#вывести таблицу
+            table = PrettyTable(["Номер", "Марка", "Модель", "Тип двигателя", "Цвет", "Мощность"])
+            with open("cars_table.txt", "r") as t:
+                S = t.read().split()
+            length = (len(S) + 1) / 6
+            first = 0
+            last = 6
+            for i in range(0, int(length)):
+                table.add_row(S[first:last])
+                first += 6
+                last += 6
+            print(table)
+        case ["2"]:#добавить авто
+            with open ("cars_table.txt", "r") as t:
+                S = t.read().split()
+            num = input("Введите новый регистрационный номер автомобиля: \n")
+            while True:
+                if num in S:
+                    num = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: \n") 
+                else:
+                    break
+            mark = input('Введите новую марку автомобиля: \n')
+            model = input('Введите новую модель автомобиля: \n')
+            yearofmodel = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
+            while True:
+                if yearofmodel != "1" and yearofmodel != "2" and yearofmodel != "3":
+                    print("Введено неправильное значение.\n")
+                    yearofmodel = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
+                else:
+                    break
+            match yearofmodel.split():
+                case ["1"]: inp = "Внутреннего сгорания"
+                case ["2"]: inp = "Электродвигатель"
+                case ["3"]: inp = "Гибридный"
+            color = input('Введите новый цвет автомобиля: \n')
+            hp = input('Введите новое значение мощности двигателя автомобиля: \n')
+            S_add = [num,' ', mark,' ', model,' ', yearofmodel,' ', color,' ', hp,' ']
+            with open ("cars_table.txt", "a") as t:
+                t.writelines(S_add)
+        case ["3"]:#изменить авто
+            with open ("cars_table.txt", "r") as t:
+                S = t.read().split()
+            num = input("Введите регистрационный номер нужного автомобиля: \n")
+            while True:
+                if num in S:
+                    break
+                else:
+                    inp = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: \n")        
+            length = (len(S) + 1) / 6
+            first = 0
+            for i in range(1, int(length)):
+                first += 6
+            car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5])
+            car.change()
+        
