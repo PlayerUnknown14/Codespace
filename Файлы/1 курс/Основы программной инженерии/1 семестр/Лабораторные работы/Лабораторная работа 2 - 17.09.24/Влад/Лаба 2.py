@@ -10,24 +10,6 @@ class Car():
         self.engine_type = engine_type
         self.color = color
         self.power = power
-    def delete(self):
-        self.number = ''
-        self.brand = ''
-        self.model = ''
-        self.engine_type = ''
-        self.color = ''
-        self.power = ''
-        list[n1] = self.number
-        list[n1 + 1]= self.brand
-        list[n1 + 2]=self.model
-        list[n1 + 3]=self.engine_type
-        list[n1 + 4]=self.color
-        list[n1 + 5]=self.power
-        print(list)
-        for i in range(0,len(list)):
-            list[i]=list[i]+' '
-        with open('cars_table.txt', 'w') as f:
-            f.writelines(list)
     def change(self):
         parameter = input("Какой параметр вы хотите изменить?\n")
         match parameter.split():
@@ -40,15 +22,15 @@ class Car():
                     else:
                         break
                 self.number = inp
-                list[n1] = self.number
+                S[first] = self.number
             case ["Марка"]:
                 imp = input('Введите новую марку автомобиля: \n')
                 self.brand = imp
-                list[n1+1] = self.brand
+                S[first+1] = self.brand
             case ["Модель"]:
                 imp = input('Введите новую модель автомобиля: \n')
                 self.model = imp
-                list[n1+2] = self.model
+                S[first+2] = self.model
             case ["Тип двигателя"]:
                 inp = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
                 while True:
@@ -62,31 +44,43 @@ class Car():
                 elif inp == "2": inp = "Электродвигатель"
                 elif inp == "3": inp = "Гибридный"
                 self.engine_type = inp
-                list[n1+3] = self.engine_type
+                S[first+3] = self.engine_type
             case ["Цвет"]:
                 imp = input('Введите новый цвет автомобиля: \n')
                 self.color = imp
-                list[n1+4] = self.color
+                S[first+4] = self.color
             case ["Мощность"]:
                 imp = input('Введите новое значение мощности двигателя автомобиля: \n')
                 self.power = imp
-                list[n1+5] = self.power
+                S[first+5] = self.power
                 
-        for i in range(0,len(list)):
-            list[i]=list[i]+' '
+        for i in range(0,len(S)):
+            S[i]=S[i]+' '
         with open('cars_table.txt', 'w') as f:
-            f.writelines(list)
-    
+            f.writelines(S)
+    def delete(self):
+        self.number = ''
+        self.brand = ''
+        self.model = ''
+        self.engine_type = ''
+        self.color = ''
+        self.power = ''
+        S[first] = self.number
+        S[first + 1]= self.brand
+        S[first + 2]=self.model
+        S[first + 3]=self.engine_type
+        S[first + 4]=self.color
+        S[first + 5]=self.power
+        print(S)
+        for i in range(0,len(S)):
+            S[i]=S[i]+' '
+        with open('cars_table.txt', 'w') as f:
+            f.writelines(S)
+
 while True:
-    option = input("Выберите нужную опцию:\n\n\
-                1. Вывести таблицу\n\
-                2. Добавить автомобиль\n\
-                3. Изменить автомобить\n\
-                4. Удалить автомобиль\n\
-                5. Найти автомобиль в таблице\n\
-                6. Закрыть программу\n")
+    option = input("Выберите нужную опцию:\n\n\t1. Вывести таблицу\n\t2. Добавить автомобиль\n\t3. Изменить автомобить\n\t4. Удалить автомобиль\n\t5. Найти автомобиль в таблице\n\t6. Закрыть программу\n")
     match option.split():
-        case ["1"]:
+        case ["1"]:#вывести таблицу
             table = PrettyTable(["Номер", "Марка", "Модель", "Тип двигателя", "Цвет", "Мощность"])
             with open("cars_table.txt", "r") as t:
                 S = t.read().split()
@@ -98,32 +92,46 @@ while True:
                 first += 6
                 last += 6
             print(table)
-        case ["2"]:
+        case ["2"]:#добавить авто
             with open ("cars_table.txt", "r") as t:
-                S = t.read()
+                S = t.read().split()
             num = input("Введите новый регистрационный номер автомобиля: \n")
             while True:
                 if num in S:
-                   inp = input("Данный регистрационный номер уже находится в базе данных.\n\
-                                Пожалуйста, введите другой номер: \n") 
+                    num = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: \n") 
                 else:
                     break
             brand = input('Введите новую марку автомобиля: \n')
             model = input('Введите новую модель автомобиля: \n')
-            engine_type = input("Введите новый тип двигателя автомобиля - \
-                         внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
+            engine_type = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
             while True:
                 if engine_type != "1" and engine_type != "2" and engine_type != "3":
                     print("Введено неправильное значение.\n")
                     engine_type = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
                 else:
                     break
-            if engine_type == "1": inp = "Внутреннего сгорания"
-            elif engine_type == "2": inp = "Электродвигатель"
-            elif engine_type == "3": inp = "Гибридный"
+            match engine_type.split():
+                case ["1"]: inp = "Внутреннего сгорания"
+                case ["2"]: inp = "Электродвигатель"
+                case ["3"]: inp = "Гибридный"
             color = input('Введите новый цвет автомобиля: \n')
             power = input('Введите новое значение мощности двигателя автомобиля: \n')
-            list_add = [num,' ', brand,' ', model,' ', engine_type,' ', color,' ', power,' ']
+            S_add = [num,' ', brand,' ', model,' ', engine_type,' ', color,' ', power,' ']
             with open ("cars_table.txt", "a") as t:
-                t.writelines(list_add)
-                
+                t.writelines(S_add)
+        case ["3"]:#изменить авто
+            with open ("cars_table.txt", "r") as t:
+                S = t.read().split()
+            num = input("Введите регистрационный номер нужного автомобиля: \n")
+            while True:
+                if num in S:
+                    break
+                else:
+                    inp = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: \n")        
+            length = (len(S) + 1) / 6
+            first = 0
+            for i in range(1, int(length)):
+                first += 6
+            car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5])
+            car.change()
+        
