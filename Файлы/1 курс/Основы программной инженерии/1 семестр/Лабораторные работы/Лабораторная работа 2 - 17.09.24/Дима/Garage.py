@@ -1,6 +1,6 @@
-
+#To-do:
+#Сделать функцию-инициализацию: прогон файла и занесение в таблицу
 from prettytable import PrettyTable
-
 class Car():
     def __init__(self, number, mark, model, yearofmodel, color, hp, carmile):
         self.number = number
@@ -10,11 +10,23 @@ class Car():
         self.color = color
         self.hp = hp
         self.carmile = carmile
+    def inittable():
+        table = PrettyTable(["Номер", "Марка", "Модель", "Год выпуска", "Цвет", "Лошадиные силы", "Пробег, км"])
+        with open("garage.txt", "r") as t:
+            S = t.read().split()
+        length = (len(S) + 1) / 7
+        first = 0
+        last = 7
+        for i in range(0, int(length)):
+            table.add_row(S[first:last])
+            first += 7
+            last += 7
+        return(print(table))
     def change(self):
         parameter = input("Какой параметр вы хотите изменить?\n")
         match parameter.split():
             case ["Номер"]:
-                inp = input("Введите изменённый регистрационный номер автомобиля: \n")
+                inp = input("Введите изменённый регистрационный номер автомобиля: ")
                 while True:
                     if inp in S:
                         inp = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: ") 
@@ -43,13 +55,13 @@ class Car():
                 self.hp  = imp
                 S[first+5] = self.hp
             case ["Пробег авто"]:
-                imp = input('Введите изменённый показатель пробега авто: ')
+                imp = input('Введите изменённый показатель пробега автомобиля: ')
                 self.carmile = imp
                 S[first+6] = self.carmile
                 
         for i in range(0,len(S)):
             S[i]=S[i]+' '
-        with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Лабораторная работа 2 - 17.09.24\Дима\garage.txt', 'w') as f:
+        with open('garage.txt', 'w') as f:
             f.writelines(S)
     def delete(self):
         self.number = ''
@@ -66,34 +78,26 @@ class Car():
         S[first + 4]=self.color
         S[first + 5]=self.hp
         S[first + 6]=self.carmile
-        print(S)
         for i in range(0,len(S)):
             S[i]=S[i]+' '
-        with open(r'C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Лабораторная работа 2 - 17.09.24\Дима\garage.txt', 'w') as f:
+        with open('garage.txt', 'w') as f:
             f.writelines(S)
+        
 
 while True:
-    option = input("Выберите нужную опцию:\n\n\t1. Вывести таблицу\n\t2. Добавить автомобиль\n\t3. Изменить автомобить\n\t4. Удалить автомобиль\n\t5. Закрыть программу\n")
+    option = input("Выберите нужную опцию:\n1. Вывести таблицу\n2. Добавить автомобиль\n3. Изменить автомобить\n4. Удалить автомобиль\n0. Закрыть программу\n")
     match option.split():
         case ["1"]:#вывести таблицу
-            table = PrettyTable(["Номер", "Марка", "Модель", "Год выпуска", "Цвет", "Лошадиные силы", "Пробег"])
-            with open(r"C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Лабораторная работа 2 - 17.09.24\Дима\garage.txt", "r") as t:
-                S = t.read().split()
-            length = (len(S) + 1) / 7
-            first = 0
-            last = 7
-            for i in range(0, int(length)):
-                table.add_row(S[first:last])
-                first += 7
-                last += 7
-            print(table)
+            Car.inittable()
         case ["2"]:#добавить авто
-            with open (r"C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Лабораторная работа 2 - 17.09.24\Дима\garage.txt", "r") as t:
+            with open ("garage.txt", "r") as t:
                 S = t.read().split()
+            length = (len(S)+1)/7
             num = input("Введите новый регистрационный номер автомобиля: ")
             while True:
-                if num in S:
-                    num = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: ") 
+                for i in range(0, int(length)*6, 6):
+                    if num == S[i]:
+                        num = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: ") 
                 else:
                     break
             mark = input('Введите новую марку автомобиля: ')
@@ -101,12 +105,14 @@ while True:
             yearofmodel = input('Введите новый год выпуска: ')
             color = input('Введите новый цвет автомобиля: ')
             hp  = input('Введите новое значение мощности двигателя автомобиля: ')
-            carmile = input('Введите новый показатель пробега авто: ')
+            carmile = input('Введите новый показатель пробега авто, км: ')
             S_add = [num,' ', mark,' ', model,' ', yearofmodel,' ', color,' ', hp,' ', carmile,' ']
-            with open (r"C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Лабораторная работа 2 - 17.09.24\Дима\garage.txt", "a") as t:
+            with open ("garage.txt", "a") as t:
                 t.writelines(S_add)
+            print('Таблица после добавления:\n')
+            Car.inittable()
         case ["3"]:#изменить авто
-            with open (r"C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Лабораторная работа 2 - 17.09.24\Дима\garage.txt", "r") as t:
+            with open ("garage.txt", "r") as t:
                 S = t.read().split()
             num = input("Введите регистрационный номер нужного автомобиля: ")
             while True:
@@ -120,21 +126,28 @@ while True:
                 first += 7
             car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5], S[first + 6])
             car.change()
+            print('Таблица после изменений:\n')
+            Car.inittable()
         case ["4"]:#удаление авто
-            with open (r"C:\Users\luvid\OneDrive\Desktop\python\Codespace\Файлы\1 курс\Основы программной инженерии\1 семестр\Лабораторные работы\Лабораторная работа 2 - 17.09.24\Дима\garage.txt", "r") as t:
+            with open ("garage.txt", "r") as t:
                 S = t.read().split()
-            num = input("Введите регистрационный номер нужного автомобиля: \n")
-            while True:
-                if num in S:
-                    break
-                else:
-                    num = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: \n")        
             length = (len(S) + 1) / 7
             first = 0
-            for i in range(1, int(length)):
-                first += 7
+            num = input("Введите регистрационный номер нужного автомобиля: \n")
+            while True:
+                print(len(S))
+                for i in range(0, int(length)*7, 7):
+                    if num == S[i]:
+                        first = i
+                        break
+                if num == S[i]:
+                    break
+                else:
+                    num = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: \n")
             car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5], S[first + 6])
             car.delete()
-        case ["5"]:
+            print('Таблица после удаления:\n')
+            Car.inittable()
+        case ["0"]:
             print("Вы вышли из программы.")
             break
