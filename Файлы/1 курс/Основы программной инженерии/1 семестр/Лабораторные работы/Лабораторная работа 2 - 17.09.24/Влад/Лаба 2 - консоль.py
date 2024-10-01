@@ -14,28 +14,28 @@ class Car():
         parameter = input("Какой параметр вы хотите изменить?\n")
         match parameter.split():
             case ["Номер"]:
-                inp = input("Введите новый регистрационный номер автомобиля: \n")
+                inp = input("Введите новый регистрационный номер автомобиля: ")
                 while True:
                     if inp in S:
-                        inp = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: \n") 
+                        inp = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: ") 
                     else:
                         break
                 self.number = inp
                 S[first] = self.number
             case ["Марка"]:
-                imp = input('Введите новую марку автомобиля: \n')
+                imp = input('Введите новую марку автомобиля: ')
                 self.brand = imp
                 S[first+1] = self.brand
             case ["Модель"]:
-                imp = input('Введите новую модель автомобиля: \n')
+                imp = input('Введите новую модель автомобиля: ')
                 self.model = imp
                 S[first+2] = self.model
             case ["Тип двигателя"]:
-                inp = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
+                inp = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
                 while True:
                     if inp != "1" and inp != "2" and inp != "3":
                         print("Введено неправильное значение.\n")
-                        inp = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
+                        inp = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
                     else:
                         break
                 if inp == "1": inp = "Внутреннего сгорания"
@@ -44,11 +44,11 @@ class Car():
                 self.engine_type = inp
                 S[first+3] = self.engine_type
             case ["Цвет"]:
-                imp = input('Введите новый цвет автомобиля: \n')
+                imp = input('Введите новый цвет автомобиля: ')
                 self.color = imp
                 S[first+4] = self.color
             case ["Мощность"]:
-                imp = input('Введите новое значение мощности двигателя автомобиля: \n')
+                imp = input('Введите новое значение мощности двигателя автомобиля: ')
                 self.power = imp
                 S[first+5] = self.power
                 
@@ -69,7 +69,6 @@ class Car():
         S[first + 3]=self.engine_type
         S[first + 4]=self.color
         S[first + 5]=self.power
-        print(S)
         for i in range(0,len(S)):
             S[i]=S[i]+' '
         with open('cars_table.txt', 'w') as f:
@@ -93,39 +92,41 @@ while True:
         case ["2"]:#добавить авто
             with open ("cars_table.txt", "r") as t:
                 S = t.read().split()
-            num = input("Введите новый регистрационный номер автомобиля: \n")
+            length = (len(S) + 1) / 6
+            num = input("Введите новый регистрационный номер автомобиля: ")
             while True:
-                if num in S:
-                    num = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: \n") 
+                for i in range(0, int(length)*6, 6):
+                    if num == S[i]:
+                        num = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: ") 
                 else:
                     break
-            brand = input('Введите новую марку автомобиля: \n')
-            model = input('Введите новую модель автомобиля: \n')
-            engine_type = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
+            brand = input('Введите новую марку автомобиля: ')
+            model = input('Введите новую модель автомобиля: ')
+            engine_type = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
             while True:
                 if engine_type != "1" and engine_type != "2" and engine_type != "3":
                     print("Введено неправильное значение.\n")
-                    engine_type = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): \n")
+                    engine_type = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
                 else:
                     break
             match engine_type.split():
                 case ["1"]: inp = "Внутреннего сгорания"
                 case ["2"]: inp = "Электродвигатель"
                 case ["3"]: inp = "Гибридный"
-            color = input('Введите новый цвет автомобиля: \n')
-            power = input('Введите новое значение мощности двигателя автомобиля: \n')
+            color = input('Введите новый цвет автомобиля: ')
+            power = input('Введите новое значение мощности двигателя автомобиля: ')
             S_add = [num,' ', brand,' ', model,' ', engine_type,' ', color,' ', power,' ']
             with open ("cars_table.txt", "a") as t:
                 t.writelines(S_add)
         case ["3"]:#изменить авто
             with open ("cars_table.txt", "r") as t:
                 S = t.read().split()
-            num = input("Введите регистрационный номер нужного автомобиля: \n")
+            num = input("Введите регистрационный номер нужного автомобиля: ")
             while True:
                 if num in S:
                     break
                 else:
-                    num = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: \n")        
+                    num = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: ")        
             length = (len(S) + 1) / 6
             first = 0
             for i in range(1, int(length)):
@@ -134,17 +135,19 @@ while True:
             car.change()
         case ["4"]:#удаление авто
             with open ("cars_table.txt", "r") as t:
-                S = t.read().split()
-            num = input("Введите регистрационный номер нужного автомобиля: \n")
-            while True:
-                if num in S:
-                    break
-                else:
-                    num = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: \n")        
+                S = t.read().split()   
             length = (len(S) + 1) / 6
             first = 0
-            for i in range(1, int(length)):
-                first += 6
+            num = input("Введите регистрационный номер нужного автомобиля: ")
+            while True:
+                for i in range(0, int(length)*6, 6):
+                    if num == S[i]:
+                        first = i
+                        break
+                if num == S[i]:
+                    break
+                else:
+                    num = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: ")
             car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5])
             car.delete()
         case ["5"]:
