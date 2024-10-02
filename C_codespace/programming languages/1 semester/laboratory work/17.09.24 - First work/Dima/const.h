@@ -1,0 +1,1 @@
+#define EKV 40000
