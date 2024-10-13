@@ -75,7 +75,7 @@ class Car():
             f.writelines(S)
 
 while True:
-    option = input("Выберите нужную опцию:\n\n\t1. Вывести таблицу\n\t2. Добавить автомобиль\n\t3. Изменить автомобить\n\t4. Удалить автомобиль\n\t5. Закрыть программу\n")
+    option = input("Выберите нужную опцию:\n\n\t1. Вывести таблицу\n\t2. Добавить автомобиль\n\t3. Изменить автомобить\n\t4. Удалить автомобиль\n\t5. Найти автомобиль\n\t6. Выйти из программы\n")
     match option.split():
         case ["1"]:#вывести таблицу
             table = PrettyTable(["Номер", "Марка", "Модель", "Тип двигателя", "Цвет", "Мощность"])
@@ -93,31 +93,32 @@ while True:
             with open ("cars_table.txt", "r") as t:
                 S = t.read().split()
             length = (len(S) + 1) / 6
-            num = input("Введите новый регистрационный номер автомобиля: ")
+            num = input("Введите регистрационный номер добавляемого автомобиля: ")
             while True:
                 for i in range(0, int(length)*6, 6):
                     if num == S[i]:
                         num = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: ") 
                 else:
                     break
-            brand = input('Введите новую марку автомобиля: ')
-            model = input('Введите новую модель автомобиля: ')
-            engine_type = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
+            brand = input('Введите марку автомобиля: ')
+            model = input('Введите модель автомобиля: ')
+            engine_type = input("Введите тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
             while True:
                 if engine_type != "1" and engine_type != "2" and engine_type != "3":
                     print("Введено неправильное значение.\n")
-                    engine_type = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
+                    engine_type = input("Введите тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
                 else:
                     break
             match engine_type.split():
-                case ["1"]: inp = "Внутреннего сгорания"
-                case ["2"]: inp = "Электродвигатель"
-                case ["3"]: inp = "Гибридный"
+                case ["1"]: engine_type = "Внутреннего_сгорания"
+                case ["2"]: engine_type = "Электродвигатель"
+                case ["3"]: engine_type = "Гибридный"
             color = input('Введите новый цвет автомобиля: ')
             power = input('Введите новое значение мощности двигателя автомобиля: ')
             S_add = [num,' ', brand,' ', model,' ', engine_type,' ', color,' ', power,' ']
             with open ("cars_table.txt", "a") as t:
                 t.writelines(S_add)
+            print("\nАвтомобиль успешно добавлен в базу данных.\n")
         case ["3"]:#изменить авто
             with open ("cars_table.txt", "r") as t:
                 S = t.read().split()
@@ -133,6 +134,7 @@ while True:
                 first += 6
             car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5])
             car.change()
+            print("\nДанные автомобиля успешно изменены.\n")
         case ["4"]:#удаление авто
             with open ("cars_table.txt", "r") as t:
                 S = t.read().split()   
@@ -150,7 +152,12 @@ while True:
                     num = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: ")
             car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5])
             car.delete()
-        case ["5"]:
+            print(f"\nАвтомобиль с номером '{num}' удалён из базы данных.\n")
+        case ["5"]:#поиск авто
+            with open ("cars_table.txt", "r") as t:
+                S = t.read().split() 
+            
+        case ["6"]:#выход из программы
             print("Вы вышли из программы.")
             break
 
