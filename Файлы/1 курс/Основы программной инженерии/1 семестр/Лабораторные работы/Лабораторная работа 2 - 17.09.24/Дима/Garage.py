@@ -82,6 +82,7 @@ class Car():
             S[i]=S[i]+' '
         with open('garage.txt', 'w') as f:
             f.writelines(S)
+        print(S)
         
 
 while True:
