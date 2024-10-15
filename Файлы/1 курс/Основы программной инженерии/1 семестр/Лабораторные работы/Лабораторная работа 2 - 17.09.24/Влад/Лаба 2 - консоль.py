@@ -23,12 +23,12 @@ class Car():
                 self.number = inp
                 S[first] = self.number
             case ["Марка"]:
-                imp = input('Введите новую марку автомобиля: ')
-                self.brand = imp
+                inp = input('Введите новую марку автомобиля: ')
+                self.brand = inp
                 S[first+1] = self.brand
             case ["Модель"]:
-                imp = input('Введите новую модель автомобиля: ')
-                self.model = imp
+                inp = input('Введите новую модель автомобиля: ')
+                self.model = inp
                 S[first+2] = self.model
             case ["Тип двигателя"]:
                 inp = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
@@ -44,12 +44,12 @@ class Car():
                 self.engine_type = inp
                 S[first+3] = self.engine_type
             case ["Цвет"]:
-                imp = input('Введите новый цвет автомобиля: ')
-                self.color = imp
+                inp = input('Введите новый цвет автомобиля: ')
+                self.color = inp
                 S[first+4] = self.color
             case ["Мощность"]:
-                imp = input('Введите новое значение мощности двигателя автомобиля: ')
-                self.power = imp
+                inp = input('Введите новое значение мощности двигателя автомобиля: ')
+                self.power = inp
                 S[first+5] = self.power
                 
         for i in range(0,len(S)):
@@ -156,9 +156,18 @@ while True:
         case ["5"]:#поиск авто
             with open ("cars_table.txt", "r") as t:
                 S = t.read().split() 
+            tablesearch = PrettyTable(["Номер", "Марка", "Модель", "Тип двигателя", "Цвет", "Мощность"])
+            searchpar = input("Введите параметр, по которому хотите произвести поиск: ")
+            length = (len(S) + 1) / 6
+            for i in range(0, int(length)*6, 6):
+                if searchpar in S[i:i+6]:
+                    tablesearch.add_row(S[i:i+6])
+                    print("По вашему запросу найдены совпадения: \n", tablesearch)
+                else:
+                    print("По вашему запросу ничего не найдено. \n")
             
         case ["6"]:#выход из программы
             print("Вы вышли из программы.")
             break
 
-#todo: заебенить опцию поиска машины в таблице, перенести вызов таблицы в функцию, добавить НАМНОГО больше параметров для машин
+#todo: добавить НАМНОГО больше параметров для машин
