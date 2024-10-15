@@ -1,5 +1,3 @@
-#To-do:
-#Сделать функцию-инициализацию: прогон файла и занесение в таблицу
 from prettytable import PrettyTable
 class Car():
     def __init__(self, number, mark, model, yearofmodel, color, hp, carmile):
