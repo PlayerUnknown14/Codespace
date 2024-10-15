@@ -23,12 +23,12 @@ class Car():
                 self.number = inp
                 S[first] = self.number
             case ["Марка"]:
-                imp = input('Введите новую марку автомобиля: ')
-                self.brand = imp
+                inp = input('Введите новую марку автомобиля: ')
+                self.brand = inp
                 S[first+1] = self.brand
             case ["Модель"]:
-                imp = input('Введите новую модель автомобиля: ')
-                self.model = imp
+                inp = input('Введите новую модель автомобиля: ')
+                self.model = inp
                 S[first+2] = self.model
             case ["Тип двигателя"]:
                 inp = input("Введите новый тип двигателя автомобиля - внутреннего сгорания (1), электродвигатель (2), гибридный (3): ")
@@ -44,12 +44,12 @@ class Car():
                 self.engine_type = inp
                 S[first+3] = self.engine_type
             case ["Цвет"]:
-                imp = input('Введите новый цвет автомобиля: ')
-                self.color = imp
+                inp = input('Введите новый цвет автомобиля: ')
+                self.color = inp
                 S[first+4] = self.color
             case ["Мощность"]:
-                imp = input('Введите новое значение мощности двигателя автомобиля: ')
-                self.power = imp
+                inp = input('Введите новое значение мощности двигателя автомобиля: ')
+                self.power = inp
                 S[first+5] = self.power
                 
         for i in range(0,len(S)):
