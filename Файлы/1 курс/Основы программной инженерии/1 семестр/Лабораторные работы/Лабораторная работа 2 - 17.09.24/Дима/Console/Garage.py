@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 class Car():
-    def __init__(self, number, mark, model, yearofmodel, color, hp, carmile):
+    def __init__(self, number, mark, model, yearofmodel, color, hp, carmile,owners,crushes):
         self.number = number
         self.mark = mark
         self.model = model
@@ -8,17 +8,19 @@ class Car():
         self.color = color
         self.hp = hp
         self.carmile = carmile
+        self.owners = owners
+        self.crushes = crushes
     def inittable():
-        table = PrettyTable(["Номер", "Марка", "Модель", "Год выпуска", "Цвет", "Лошадиные силы", "Пробег, км"])
+        table = PrettyTable(["Номер", "Марка", "Модель", "Год выпуска", "Цвет", "Лошадиные силы", "Пробег, км", "Количество владельцев", "Количество аварий"])
         with open("garage.txt", "r") as t:
             S = t.read().split()
-        length = (len(S) + 1) / 7
+        length = (len(S) + 1) / 9
         first = 0
-        last = 7
+        last = 9
         for i in range(0, int(length)):
             table.add_row(S[first:last])
-            first += 7
-            last += 7
+            first += 9
+            last += 9
         return(print(table))
     def change(self):
         parameter = input("Какой параметр вы хотите изменить?\n")
@@ -56,6 +58,14 @@ class Car():
                 imp = input('Введите изменённый показатель пробега автомобиля: ')
                 self.carmile = imp
                 S[first+6] = self.carmile
+            case ["Количество владельцев"]:
+                imp = input('Введите новое количество владельцев: ')
+                self.owners = imp
+                S[first+7] = self.owners
+            case ["Количество аварий"]:
+                imp = input('Введите новое количество аварий: ')
+                self.crushes = imp
+                S[first+8] = self.crushes
                 
         for i in range(0,len(S)):
             S[i]=S[i]+' '
@@ -69,6 +79,8 @@ class Car():
         self.color = ''
         self.hp  = ''
         self.carmile = ''
+        self.owners = ''
+        self.crushes = ''
         S[first] = self.number
         S[first + 1]= self.mark
         S[first + 2]=self.model
@@ -76,6 +88,8 @@ class Car():
         S[first + 4]=self.color
         S[first + 5]=self.hp
         S[first + 6]=self.carmile
+        S[first + 7]=self.owners
+        S[first + 8]=self.crushes
         for i in range(0,len(S)):
             S[i]=S[i]+' '
         with open('garage.txt', 'w') as f:
@@ -91,10 +105,10 @@ while True:
         case ["2"]:#добавить авто
             with open ("garage.txt", "r") as t:
                 S = t.read().split()
-            length = (len(S)+1)/7
+            length = (len(S)+1)/9
             num = input("Введите новый регистрационный номер автомобиля: ")
             while True:
-                for i in range(0, int(length)*6, 6):
+                for i in range(0, int(length)*8, 8):
                     if num == S[i]:
                         num = input("Данный регистрационный номер уже находится в базе данных.\nПожалуйста, введите другой номер: ") 
                 else:
@@ -105,7 +119,9 @@ while True:
             color = input('Введите новый цвет автомобиля: ')
             hp  = input('Введите новое значение мощности двигателя автомобиля: ')
             carmile = input('Введите новый показатель пробега авто, км: ')
-            S_add = [num,' ', mark,' ', model,' ', yearofmodel,' ', color,' ', hp,' ', carmile,' ']
+            owners = input('Введите новое количество владельцев: ')
+            crushes = input('Введите новое количество аварий: ')
+            S_add = [num,' ', mark,' ', model,' ', yearofmodel,' ', color,' ', hp,' ', carmile,' ', owners,' ', crushes,' ']
             with open ("garage.txt", "a") as t:
                 t.writelines(S_add)
             print('Таблица после добавления:\n')
@@ -114,10 +130,10 @@ while True:
             with open ("garage.txt", "r") as t:
                 S = t.read().split()
             num = input("Введите регистрационный номер нужного автомобиля: \n")
-            length = (len(S) + 1) / 7
+            length = (len(S) + 1) / 9
             first = 0
             while True:
-                for i in range(0, int(length)*7, 7):
+                for i in range(0, int(length)*9, 9):
                     if num == S[i]:
                         first = i
                         break
@@ -125,18 +141,18 @@ while True:
                     break
                 else:
                     num = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: \n")   
-            car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5], S[first + 6])
+            car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5], S[first + 6], S[first + 7], S[first + 8])
             car.change()
             print('Таблица после изменений:\n')
             Car.inittable()
         case ["4"]:#удаление авто
             with open ("garage.txt", "r") as t:
                 S = t.read().split()
-            length = (len(S) + 1) / 7
+            length = (len(S) + 1) / 9
             first = 0
             num = input("Введите регистрационный номер нужного автомобиля: \n")
             while True:
-                for i in range(0, int(length)*7, 7):
+                for i in range(0, int(length)*9, 9):
                     if num == S[i]:
                         first = i
                         break
@@ -144,19 +160,19 @@ while True:
                     break
                 else:
                     num = input("Автомобиль с таким номером отсутствует в базе данных.\nПожалуйста, введите другой номер: \n")
-            car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5], S[first + 6])
+            car = Car(S[first], S[first + 1], S[first + 2], S[first + 3], S[first + 4], S[first + 5], S[first + 6], S[first + 7], S[first + 8])
             car.delete()
             print('Таблица после удаления:\n')
             Car.inittable()
         case ["5"]:
             with open("garage.txt","r") as t:
                 S = t.read().split()
-            tablesearch = PrettyTable(["Номер", "Марка", "Модель", "Год выпуска", "Цвет", "Лошадиные силы", "Пробег, км"])
+            tablesearch = PrettyTable(["Номер", "Марка", "Модель", "Год выпуска", "Цвет", "Лошадиные силы", "Пробег, км", "Количество владельцев", "Количество аварий"])
             searchpar = input('Введите параметр, по которому хотите произвести поиск: ')
-            length = (len(S) + 1) / 7
-            for i in range(0, int(length)*7, 7):
-                if searchpar in S[i:i+7]:
-                    tablesearch.add_row(S[i:i+7])
+            length = (len(S) + 1) / 9
+            for i in range(0, int(length)*9, 9):
+                if searchpar in S[i:i+9]:
+                    tablesearch.add_row(S[i:i+9])
             print(tablesearch)
         case ["0"]:
             print("Вы вышли из программы.")

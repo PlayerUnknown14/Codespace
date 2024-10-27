@@ -30,15 +30,17 @@ class Main(tk.Frame):
         btn_refresh = tk.Button(toolbar, text='Обновить', bg='#d7d8e0', bd=0, compound=tk.TOP, command=self.view_records)
         btn_refresh.pack(side=tk.LEFT)
 
-        self.tree = ttk.Treeview(self, columns=('Num', 'mark', 'model', 'yearofmodel','colour','hp','probeg'), height=15, show='headings')
+        self.tree = ttk.Treeview(self, columns=('Num', 'mark', 'model', 'yearofmodel','colour','hp','probeg','owners','crushes'), height=15, show='headings')
 
-        self.tree.column('Num', width=30, anchor=tk.CENTER)
+        self.tree.column('Num', width=60, anchor=tk.CENTER)
         self.tree.column('mark', width=100, anchor=tk.CENTER)
         self.tree.column('model', width=100, anchor=tk.CENTER)
         self.tree.column('yearofmodel', width=100, anchor=tk.CENTER)
         self.tree.column('colour', width=100, anchor=tk.CENTER)
         self.tree.column('hp', width=100, anchor=tk.CENTER)
         self.tree.column('probeg', width=100, anchor=tk.CENTER)
+        self.tree.column('owners', width=100, anchor=tk.CENTER)
+        self.tree.column('crushes', width=100, anchor=tk.CENTER)
         
         self.tree.heading('Num', text='Номер')
         self.tree.heading('mark', text='Марка')
@@ -47,6 +49,8 @@ class Main(tk.Frame):
         self.tree.heading('colour', text='Цвет')
         self.tree.heading('hp', text='ЛС')
         self.tree.heading('probeg', text='Пробег')
+        self.tree.heading('owners', text='Кол-во владельцев')
+        self.tree.heading('crushes', text='Кол-во аварий')
 
         self.tree.pack(side=tk.LEFT)
 
@@ -54,13 +58,13 @@ class Main(tk.Frame):
         scroll.pack(side=tk.LEFT, fill=tk.Y)
         self.tree.configure(yscrollcommand=scroll.set)
 
-    def records(self, mark, model, yearofmodel, colour, hp, probeg):
-        self.db.insert_data(mark, model, yearofmodel, colour, hp, probeg)
+    def records(self, mark, model, yearofmodel, colour, hp, probeg, owners, crushes):
+        self.db.insert_data(mark, model, yearofmodel, colour, hp, probeg, owners, crushes)
         self.view_records()
 
-    def update_record(self, mark, model, yearofmodel, colour, hp, probeg):
-        self.db.c.execute('''UPDATE garage SET mark=?, model=?, yearofmodel=?, colour=?, hp=?, probeg=? WHERE ID=?''',
-                          (mark, model, yearofmodel, colour, hp, probeg, self.tree.set(self.tree.selection()[0], '#1')))
+    def update_record(self, mark, model, yearofmodel, colour, hp, probeg, owners, crushes):
+        self.db.c.execute('''UPDATE garage SET mark=?, model=?, yearofmodel=?, colour=?, hp=?, probeg=?, owners=?, crushes=? WHERE ID=?''',
+                          (mark, model, yearofmodel, colour, hp, probeg, owners, crushes, self.tree.set(self.tree.selection()[0], '#1')))
         self.db.conn.commit()
         self.view_records()
 
@@ -114,6 +118,10 @@ class Child(tk.Toplevel):
         label_hp.place(x=50, y=140)
         label_probeg = tk.Label(self, text='Пробег, км:')
         label_probeg.place(x=50, y=170)
+        label_owners = tk.Label(self, text='Кол-во владельцев:')
+        label_owners.place(x=50, y=200)
+        label_crushes = tk.Label(self, text='Кол-во аварий:')
+        label_crushes.place(x=50, y=230)
         
         self.entry_mark = ttk.Entry(self)
         self.entry_mark.place(x=200, y=20)
@@ -132,18 +140,26 @@ class Child(tk.Toplevel):
 
         self.entry_probeg = ttk.Entry(self)
         self.entry_probeg.place(x=200, y=170)
+        
+        self.entry_owners = ttk.Entry(self)
+        self.entry_owners.place(x=200, y=200)
+        
+        self.entry_crushes = ttk.Entry(self)
+        self.entry_crushes.place(x=200, y=230)
 
         btn_cancel = ttk.Button(self, text='Закрыть', command=self.destroy)
-        btn_cancel.place(x=300, y=200)
+        btn_cancel.place(x=300, y=260)
 
         self.btn_ok = ttk.Button(self, text='Добавить')
-        self.btn_ok.place(x=220, y=200)
+        self.btn_ok.place(x=220, y=260)
         self.btn_ok.bind('<Button-1>', lambda event: self.view.records(self.entry_mark.get(),
                                                                        self.entry_model.get(),
                                                                        self.entry_yearofmodel.get(),
                                                                        self.entry_colour.get(),
                                                                        self.entry_hp.get(),
-                                                                       self.entry_probeg.get()))
+                                                                       self.entry_probeg.get(),
+                                                                       self.entry_owners.get(),
+                                                                       self.entry_crushes.get()))
 
         self.grab_set()
         self.focus_set()
@@ -160,13 +176,15 @@ class Update(Child):
     def init_edit(self):
         self.title('Редактировать авто')
         btn_edit = ttk.Button(self, text='Редактировать')
-        btn_edit.place(x=205, y=200)
+        btn_edit.place(x=205, y=260)
         btn_edit.bind('<Button-1>', lambda event: self.view.update_record(self.entry_mark.get(),
                                                                        self.entry_model.get(),
                                                                        self.entry_yearofmodel.get(),
                                                                        self.entry_colour.get(),
                                                                        self.entry_hp.get(),
-                                                                       self.entry_probeg.get()))
+                                                                       self.entry_probeg.get(),
+                                                                       self.entry_owners.get(),
+                                                                       self.entry_crushes.get()))
 
         self.btn_ok.destroy()
 
@@ -207,12 +225,12 @@ class DB:
         self.conn = sqlite3.connect('garage.db')
         self.c = self.conn.cursor()
         self.c.execute(
-            '''CREATE TABLE IF NOT EXISTS garage (id integer primary key, mark text, model text, Yearofmodel text, colour text, hp text, probeg text)''')
+            '''CREATE TABLE IF NOT EXISTS garage (id integer primary key, mark text, model text, Yearofmodel text, colour text, hp text, probeg text, owners text, crushes text)''')
         self.conn.commit()
 
-    def insert_data(self, mark, model, yearofmodel, colour, hp, probeg):
-        self.c.execute('''INSERT INTO garage(mark, model, Yearofmodel, colour, hp, probeg) VALUES (?, ?, ?, ?, ?, ?)''',
-                       (mark, model, yearofmodel, colour, hp, probeg))
+    def insert_data(self, mark, model, yearofmodel, colour, hp, probeg, owners, crushes):
+        self.c.execute('''INSERT INTO garage(mark, model, Yearofmodel, colour, hp, probeg, owners, crushes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                       (mark, model, yearofmodel, colour, hp, probeg, owners, crushes))
         self.conn.commit()
 
 
@@ -222,6 +240,6 @@ if __name__ == "__main__":
     app = Main(root)
     app.pack()
     root.title("garage")
-    root.geometry("665x450+300+200")
+    root.geometry("900x360")
     root.resizable(False, False)
     root.mainloop()
