@@ -18,7 +18,7 @@ int main (){
                 printf("Недостаточно денег для покупки газеты.\n");
             else
                 printf("Вы приобрели газету. Ваша сдача - %d.\n", summa - newspaper);
-            break;
+            ;
         case '2':
             if (summa < magazine)
                 printf("Недостаточно денег для покупки журнала.\n");
