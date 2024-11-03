@@ -34,11 +34,18 @@ def quadratic(a, b, c):
     return solutions
 
 
-def cubic(a, b, c, d):
+def cubic(x):
+    a = x[0]
+    b = x[1]
+    c = x[2]
+    d = x[3]
+    print(a,b,c,d)
     if a == 0 or b == 0 or c == 0 or d == 0:
         raise ValueError('Аргументы должны быть не равны нулю')
-    if type(a,b,c,d) not in [int,float]:
+    if type(a) not in [int,float] or type(b) not in [int,float] or type(c) not in [int,float] or type(d) not in [int,float] :
         raise TypeError('Аргументы должны быть либо целыми, либо дробными числами')
+
+    
     solutions = []
     if a != 0:
         p = (3 * a * c - b ** 2) / (3 * a ** 2)
