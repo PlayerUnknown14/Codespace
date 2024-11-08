@@ -4,15 +4,6 @@
 import cmath
 from cmath import *
 
-def cbrt(polynomial):
-    solution = set()
-    root1 = polynomial ** (1 / 3)
-    root2 = (polynomial ** (1 / 3)) * (-1 / 2 + (sqrt(3) * 1j) / 2)
-    root3 = (polynomial ** (1 / 3)) * (-1 / 2 - (sqrt(3) * 1j) / 2)
-    solution.update({root1, root2, root3})
-    return solution
-
-
 def linear(a, b):
     solutions = set()
     if a == 0 and b == 0:
@@ -41,6 +32,13 @@ def quadratic(massive):
     return solutions
 
 def cubic(massive):
+    def cbrt(polynomial):
+        solution = set()
+        root1 = polynomial ** (1 / 3)
+        root2 = root1 * (-1 / 2 + (sqrt(3) * 1j) / 2)
+        root3 = root1 * (-1 / 2 - (sqrt(3) * 1j) / 2)
+        solution.update({root1, root2, root3})
+        return solution
     a = massive[0]
     b = massive[1]
     c = massive[2]
@@ -60,52 +58,56 @@ def cubic(massive):
         solutions.update(quadratic(b, c, d))
     return solutions
 
-'''
-print('\nax^3+bx^2+cx+d=0')
-def check():
-    while True:
-        try:
-            print("Введите коэффиценты")
-            a, b, c, d = map(float, input().split())
-            5/a, 5/b, 5/c, 5/d
-            break
-        except ValueError:
-            print("Коэффиценты введены неверно")
-        except ZeroDivisionError:
-            print("Коэффиценты не могут быть равны нулю")
-    return a, b, c, d
+def check(massive):
+    a = massive[0]
+    b = massive[1]
+    c = massive[2]
+    d = massive[3]
+    try:
+        5/a, 5/b, 5/c, 5/d
+        return True
+    except TypeError:
+        return False
+    except ValueError:
+        return False
+    except ZeroDivisionError:
+        return False
+
+while True:
+    print("Введите коэффиценты")
+    a, b, c, d = map(float, input().split())
+    list_coefs = [a, b, c, d]
+    if check(list_coefs) == True:
+        break
+    else:
+        print("Коэффиценты введены неверно")
 
 
-a, b, c, d = check()
 
-print('Корни уравнения: ',cubic(a, b, c, d))
-amass = cubic(a,b,c,d)
-#Подстановка корней в уравнение (ax^3+bx^2+cx+d = 0)
-ans1 = a*amass[0]**3+b*amass[0]**2+c*amass[0]+d
-ans2 = a*amass[1]**3+b*amass[1]**2+c*amass[1]+d
-ans3 = a*amass[2]**3+b*amass[2]**2+c*amass[2]+d
-#Перевод из complex в float
-ansfloat1 = float(ans1.real)
-ansfloat2 = float(ans2.real)
-ansfloat3 = float(ans3.real)
-print('Значения уравнения с подставленными корнями: ',ans1,ans2,ans3)
-#Проверка подстановленных корней в уравнение. Граница погрешности найдена в файле "Cube test minmax error"
-print(ansfloat1); print(ansfloat2); print(ansfloat3)
+answers = cubic(list_coefs)
+def predel_check(massive):
+    ans1 = a*massive[0]**3+b*massive[0]**2+c*massive[0]+d
+    ans2 = a*massive[1]**3+b*massive[1]**2+c*massive[1]+d
+    ans3 = a*massive[2]**3+b*massive[2]**2+c*massive[2]+d
 
-predel = 1.0e-9
-if abs(ansfloat1) < predel:
-    print("Первый корень прошёл проверку при максимальной границе в 1.0e-9")
-else:
-    print("Корень не прошёл проверку. Возможно, произошла ошибка вычисления, либо корень подходит, но больше границы погрешности")
-if abs(ansfloat2) < predel:
-    print("Второй корень прошёл проверку при максимальной границе в 1.0e-9")
-else:
-    print("Корень не прошёл проверку. Возможно, произошла ошибка вычисления, либо корень подходит, но больше границы погрешности")
-if abs(ansfloat3) < predel:
-    print("Третий корень прошёл проверку при максимальной границе в 1.0e-9")
-else:
-    print("Корень не прошёл проверку. Возможно, произошла ошибка вычисления, либо корень подходит, но больше границы погрешности")
+    ansfloat1 = float(ans1.real)
+    ansfloat2 = float(ans2.real)
+    ansfloat3 = float(ans3.real)
 
+    predel = 1.0e-9
+    print(abs(ansfloat1))
+    print(abs(ansfloat2), ans2)
+    print(abs(ansfloat3))
+
+    if abs(ansfloat1) >= predel:
+        return False
+    if abs(ansfloat2) >= predel:
+        return False
+    if abs(ansfloat3) >= predel:
+        return False
+    return True
+
+'''  
 #================================
 
 def Input_koefs():

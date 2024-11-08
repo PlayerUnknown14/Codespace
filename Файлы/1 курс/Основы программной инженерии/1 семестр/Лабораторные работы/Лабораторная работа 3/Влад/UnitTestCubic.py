@@ -1,7 +1,7 @@
 import unittest
 from Equations import cubic
 from Equations import quadratic
-6
+
 massive_coef_cubic = [1, 2, -1, -2] #коэффициенты кубического уравнения
 massive_ans_cubic = [1, -2, -1] #ожидаемые ответы для кубического уравнения
 
