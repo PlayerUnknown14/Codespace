@@ -29,9 +29,14 @@ while True:
             index = check()
             worddef = words[index]
             word = worddef[0]
+            word = word.upper()
             definition = worddef[1]
             wordmass = []
             wordgame = []
+
+            life = 10
+            massletters = []
+
 
             for letter in word:
                 wordmass.append(letter)
@@ -40,25 +45,43 @@ while True:
                 wordgame.append('*')
 #Цикл для слова. Содержит процесс игры
             while True:
-                print('-----------------Определение слова-----------------')
+                print('\n-----------------Определение слова-----------------')
                 print(definition)
-                print('---------------------------------------------------')
+                print('---------------------------------------------------\n')
                 print(wordgame)
-                letter = input('Введите букву: ')
-
-                if letter in wordmass:
-                    print('Такая буква есть')
-                    for i in range(len(wordmass)):
-                        if letter == wordmass[i]:
-                            wordgame[i] = letter
-
-                else:
-                    print('Такой буквы нет')
-                if wordgame == wordmass:
-                    print('Слово: ', word)
+                print('Количество жизней: ', life)
+                letter = input('\nВведите букву или слово целиком: ')
+                if letter.upper() == word:
+                    print('\nСлово: ', word)
                     print('------------')
                     print('Вы победили')
                     print('------------')
+                    break
+                elif letter.upper() in massletters:
+                    print('Буква', letter.upper(),'уже была введена')
+                    life -= 1
+                    print('Количество жизней: ',life)
+                elif letter.upper() in wordmass:
+                    print('Буква',letter, 'есть в списке')
+                    for i in range(len(wordmass)):
+                        if letter.upper() == wordmass[i]:
+                            wordgame[i] = letter.upper()
+
+                else:
+                    life -= 1
+                    print('Количество жизней: ',life)
+                    print('Буквы', letter, 'нет')
+                    
+                massletters.append(letter)
+
+                if wordgame == wordmass:
+                    print('\nСлово: ', word)
+                    print('------------')
+                    print('Вы победили')
+                    print('------------')
+                    break
+                if life == 0:
+                    print('Вы проиграли\n')
                     break
         case['0']:
             print('Вы вышли из игры')
