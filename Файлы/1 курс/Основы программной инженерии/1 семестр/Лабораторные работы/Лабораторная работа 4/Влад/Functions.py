@@ -1,3 +1,15 @@
+from random import *
+
+def word_pick():
+    global dictionary
+    number = randint(0, 999)
+    dict_word = dictionary[number] #Строка из слова + описания
+    word, definition = dict_word[0], dict_word[1] #Слово и описание отдельно
+    word = word.upper()
+    definition = definition[1:len(definition)].capitalize()
+    return word, definition
+    
+    
 '''
 Импортируем словарь в переменную
 Выбираем слово из словаря
@@ -21,14 +33,9 @@ while True:
     menu = input("Выберите опцию:\n1 - Играть\n2 - Выйти из игры\nВвод: ")
     match menu.split():
         case ["1"]:
-            seed1, seed2 = map(int, input("\nВведите два натуральных числа (через пробел): ").split())
-            seed = (seed1**seed1 + seed2**seed2) % 999
-            dict_word = dictionary[seed] #Строка из слова + описания
-            word, definition = dict_word[0], dict_word[1] #Слово и описание отдельно
-            word = word.upper()
-            definition = definition[1:len(definition)].capitalize()
-            word_letters = list(word) #Массив из букв слова
-            guess_word = ["*"] * len(word) #Массив из звёзд длиной как слово
+            word, definition = word_pick()
+            word_letters = list(word)
+            guess_word = ["*"] * len(word)
             
             while True:
                 print("\n==========Угадайте слово==========")
