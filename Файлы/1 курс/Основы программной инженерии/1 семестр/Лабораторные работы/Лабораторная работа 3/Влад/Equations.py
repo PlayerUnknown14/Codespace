@@ -72,7 +72,7 @@ def check(massive):
         return False
     except ZeroDivisionError:
         return False
-
+'''
 while True:
     print("Введите коэффиценты")
     a, b, c, d = map(float, input().split())
@@ -106,8 +106,7 @@ def predel_check(massive):
     if abs(ansfloat3) >= predel:
         return False
     return True
-
-'''  
+ 
 #================================
 
 def Input_koefs():
