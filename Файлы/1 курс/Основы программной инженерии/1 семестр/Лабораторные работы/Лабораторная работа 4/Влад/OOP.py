@@ -10,14 +10,15 @@
 '''
 from random import *
 
-def word_pick():
-    global dictionary
-    number = randint(0, 999)
-    dict_word = dictionary[number] #Строка из слова + описания
-    word, definition = dict_word[0], dict_word[1] #Слово и описание отдельно
-    word = word.upper()
-    definition = definition[1:len(definition)].capitalize()
-    return word, definition
+class Game():
+    def word_pick():
+        global dictionary
+        number = randint(0, 999)
+        dict_word = dictionary[number] #Строка из слова + описания
+        word, definition = dict_word[0], dict_word[1] #Слово и описание отдельно
+        word = word.upper()
+        definition = definition[1:len(definition)].capitalize()
+        return word, definition
 
 count = 0
 dictionary = []
@@ -32,7 +33,7 @@ while True:
     menu = input("Выберите опцию:\n1 - Играть\n2 - Выйти из игры\nВвод: ")
     match menu.split():
         case ["1"]:
-            word, definition = word_pick()
+            word, definition = Game.word_pick()
             word_letters = list(word)
             guess_word = ["*"] * len(word)
             
