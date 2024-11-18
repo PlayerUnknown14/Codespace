@@ -10,24 +10,24 @@ root.title('MathOperations')
 root.geometry('500x500')
 
 def click():
-    text = Combobox.get()
+    text = Combobox.get()   
     if text == 'Сложение':
-        sum()
-def sum():
-    amount = amount_entry.get()
-    range = range_entry.get().split(' ')
-    mass = []
-    amount_int = int(amount)
-    start_time = time.time()
-    for i in range(1, amount_int):
-        i = randint(int(range[0]), int(range[1]))
-        mass.append(i)
+        вычисления.sum()
+class вычисления:
+    def sum():
+        amount = amount_entry.get()
+        range = range_entry.get().split(' ')
+        a = []
+        for i in range(amount):
+            a.append(randint(range[0], range[1]))
+        start_time = time.time()
+        summass = sum(a)
         end_time = time.time()
         execution_time = end_time - start_time
-    time_label.configure(text=f'Время выполнения программы: {execution_time} секунд')
-    mass_label.configure(text=f'Сумма массива: {sum(mass)}')
-    print(f'Сумма массива: {sum(mass)}')
-    print(f"Время выполнения программы: {execution_time} секунд")
+        time_label.configure(text=f'Время выполнения программы: {execution_time} секунд')
+        mass_label.configure(text=f'Сумма массива: {summass}')
+        print(f'Сумма массива: {summass}')
+        print(f"Время выполнения программы: {execution_time} секунд")
 
 
 
