@@ -8,7 +8,7 @@ int room[2][10] = { {102, 107, 109, 112, 115, 116, 123, 125, 127, 130},
 void main(void) {
     const int min = 1;
     const int max = 5;
-    int i, j, flag=0, num;
+    int i, j, flag=2, num;
 
     srand((unsigned)time(0));
 
@@ -31,6 +31,6 @@ void main(void) {
             flag = 1;
             printf("Комната #%i рассчитана на %i мест\n", room[0][j], room[1][j]);
         }
-    if (flag == 0)
+    if (flag == 2)
         puts("Комнат с таким количеством мест нет");
 }
