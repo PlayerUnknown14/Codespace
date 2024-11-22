@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 int mass[10];
-int umn = 1;
+unsigned int umn = 1;
 float aver = 0;
 int cnt = 0;
 void main(void)
