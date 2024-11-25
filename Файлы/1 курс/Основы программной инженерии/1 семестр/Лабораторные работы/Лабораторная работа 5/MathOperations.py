@@ -8,8 +8,6 @@ import sys
 from math import *
 import numpy as np
 
-
-
 sys.set_int_max_str_digits(1121241)
 
 root = tk.Tk()
@@ -36,6 +34,8 @@ def clicked():
         Operations.delenie()
     if text == 'Корни':
         Operations.korni()
+    if text == 'Логарифм':
+        Operations.logarifm()
         
         
 class Others:
@@ -53,14 +53,20 @@ class Others:
         timeofgen = end_time - start_time
         return massgen
     def hardgeneration():
+        global timeofgen
+        start_time = time.time()
         amount = amount_entry.get()
         rangeran = range_entry.get().split(' ')
         rangemin = int(rangeran[0])
         rangemax = int(rangeran[1])
         massgen = []
         for i in range(int(amount)//2):
-            massgen.append(randoom(rangemin, rangemax))
-            massgen.append(1/randoom(rangemin, rangemax))
+            massgen.append(randint(rangemin, rangemax))
+            massgen.append(1/randint(rangemin, rangemax))
+            # massgen.append(np.random.randint(rangemin, rangemax))
+            # massgen.append(1/np.random.randint(rangemin, rangemax))
+        end_time = time.time()
+        timeofgen = end_time - start_time
         return massgen
     
     def clipboard():
@@ -83,7 +89,7 @@ class Others:
         
 class Operations:
     def slozhenie(): 
-        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen, timeofgen
+        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen
         
         
         massgen = Others.simplegeneration()
@@ -102,11 +108,11 @@ class Operations:
         timeofoperations = execution_time
         lengthofgen = len(massgen)
         totalvalue = summass
-        rangeofgen = f'{min(massgen)}-{max(massgen)}'
+        rangeofgen = f'{min(massgen)};{max(massgen)}'
         clipboardmemory = f'Время выполнения программы: {execution_time} секунд'
 
     def raznost():
-        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen, timeofgen
+        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen
         
         massgen = Others.simplegeneration()
         itograzn = 0
@@ -117,40 +123,40 @@ class Operations:
         end_time = time.time()
         execution_time = end_time - start_time
         time_label.configure(text=f'Время выполнения программы: {execution_time} секунд')
-        timemass_label.configure(text=f'Время генерации массива: {timeofgen}')
+        timemass_label.configure(text=f'Время генерации массива: {timeofgen} секунд')
         mass_label.configure(text=f'Разность массива: {itograzn}')
 
         typeofgen = 'Вычитание'
         timeofoperations = execution_time
         lengthofgen = len(massgen)
         totalvalue = itograzn
-        rangeofgen = f'{min(massgen)}-{max(massgen)}'
+        rangeofgen = f'{min(massgen)};{max(massgen)}'
         clipboardmemory = f'Время выполнения программы: {execution_time} секунд'
         
     def umnozh(): 
-        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen, timeofgen
+        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen
         
         massgen = Others.hardgeneration()
         itogumnozh = 1
         start_time = time.time()
         for i in massgen:
-            itogumnozh = float(itogumnozh*i)
+            itogumnozh = itogumnozh*i
         
         end_time = time.time()
         execution_time = end_time - start_time
         time_label.configure(text=f'Время выполнения программы: {execution_time} секунд')
-        timemass_label.configure(text=f'Время генерации массива: {timeofgen}')
+        timemass_label.configure(text=f'Время генерации массива: {timeofgen} секунд')
         mass_label.configure(text=f'Произведение массива: {itogumnozh}')
         
         typeofgen = 'Умножение'
         timeofoperations = execution_time
         lengthofgen = len(massgen)
         totalvalue = itogumnozh
-        rangeofgen = f'{min(massgen)}-{max(massgen)}'
+        rangeofgen = f'{min(massgen)};{max(massgen)}'
         clipboardmemory = f'Время выполнения программы: {execution_time} секунд'
 
     def delenie(): 
-        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen, timeofgen
+        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen
         
         massgen = Others.hardgeneration()
         itogdel = 1
@@ -161,21 +167,20 @@ class Operations:
         end_time = time.time()
         execution_time = end_time - start_time
         time_label.configure(text=f'Время выполнения программы: {execution_time} секунд')
-        timemass_label.configure(text=f'Время генерации массива: {timeofgen}')
+        timemass_label.configure(text=f'Время генерации массива: {timeofgen} секунд')
         mass_label.configure(text=f'Произведение массива: {itogdel}')
         
         typeofgen = 'Деление'
         timeofoperations = execution_time
         lengthofgen = len(massgen)
         totalvalue = itogdel
-        rangeofgen = f'{min(massgen)}-{max(massgen)}'
+        rangeofgen = f'{min(massgen)};{max(massgen)}'
         clipboardmemory = f'Время выполнения программы: {execution_time} секунд'
         
     def korni(): 
-        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen, timeofgen
+        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen
         
-        massgen = Others.hardgeneration()
-        itogumnozh = 1
+        massgen = Others.simplegeneration()
         start_time = time.time()
         for i in range(0, len(massgen)-1):
             bufer = sqrt(massgen[i])
@@ -184,16 +189,37 @@ class Operations:
         execution_time = end_time - start_time
         time_label.configure(text=f'Время выполнения программы: {execution_time} секунд')
         timemass_label.configure(text=f'Время генерации массива: {timeofgen} секунд')
-        mass_label.configure(text=f'Произведение массива: {itogumnozh}')
+        mass_label.configure(text=f'')
         
-        typeofgen = 'Деление'
+        typeofgen = 'Корни'
         timeofoperations = execution_time
         lengthofgen = len(massgen)
         totalvalue = 'Процесс операции "Корни" не подразумевает итогового значения'
-        rangeofgen = f'{min(massgen)}-{max(massgen)}'
+        rangeofgen = f'{min(massgen)};{max(massgen)}'
         clipboardmemory = f'Время выполнения программы: {execution_time} секунд'
 
-Operationslist = ['Сложение', 'Вычитание', 'Умножение', 'Деление', 'Корни']
+    def logarifm(): 
+        global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen
+        
+        massgen = Others.simplegeneration()
+        start_time = time.time()
+        for i in range(0, len(massgen)-1):
+            bufer = log10(massgen[i])
+            massgen[i] = bufer
+        end_time = time.time()
+        execution_time = end_time - start_time
+        time_label.configure(text=f'Время выполнения программы: {execution_time} секунд')
+        timemass_label.configure(text=f'Время генерации массива: {timeofgen} секунд')
+        mass_label.configure(text=f'')
+        
+        typeofgen = 'Логарифм'
+        timeofoperations = execution_time
+        lengthofgen = len(massgen)
+        totalvalue = 'Процесс операции "Логарифм" не подразумевает итогового значения'
+        rangeofgen = f'{min(massgen)};{max(massgen)}'
+        clipboardmemory = f'Время выполнения программы: {execution_time} секунд'
+
+Operationslist = ['Сложение', 'Вычитание', 'Умножение', 'Деление', 'Корни', 'Логарифм']
 Operations_var = StringVar(value=Operationslist[0])
 
 Combobox = ttk.Combobox(textvariable=Operations_var, values=Operationslist, state='readonly')
