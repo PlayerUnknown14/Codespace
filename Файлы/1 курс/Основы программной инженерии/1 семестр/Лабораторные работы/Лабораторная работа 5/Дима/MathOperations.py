@@ -55,19 +55,32 @@ class Others:
     def hardgeneration():
         global timeofgen
         start_time = time.time()
+        
         amount = amount_entry.get()
         rangeran = range_entry.get().split(' ')
-        rangemin = int(rangeran[0])
-        rangemax = int(rangeran[1])
-        massgen = []
-        for i in range(int(amount)//2):
-            massgen.append(randint(rangemin, rangemax))
-            massgen.append(1/randint(rangemin, rangemax))
-            # massgen.append(np.random.randint(rangemin, rangemax))
-            # massgen.append(1/np.random.randint(rangemin, rangemax))
+        rangemin = float(rangeran[0])
+        rangemax = float(rangeran[1])
+        massgen = np.random.uniform(rangemin, rangemax, int(amount))
+        print(rangeran)
+        print(rangemin)
+        print(rangemax)
+        
         end_time = time.time()
         timeofgen = end_time - start_time
         return massgen
+        # global timeofgen
+        # start_time = time.time()
+        # amount = amount_entry.get()
+        # rangeran = range_entry.get().split(' ')
+        # rangemin = int(rangeran[0])
+        # rangemax = int(rangeran[1])
+        # massgen = []
+        # for i in range(int(amount)//2):
+        #     massgen.append(randint(rangemin, rangemax))
+        #     massgen.append(1/randint(rangemin, rangemax))
+        # end_time = time.time()
+        # timeofgen = end_time - start_time
+        # return massgen
     
     def clipboard():
         root.clipboard_clear()
@@ -137,10 +150,12 @@ class Operations:
         global clipboardmemory, typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen
         
         massgen = Others.hardgeneration()
-        itogumnozh = 1
+        itogumnozh = massgen[0]
         start_time = time.time()
+        print(massgen)
         for i in massgen:
             itogumnozh = itogumnozh*i
+
         
         end_time = time.time()
         execution_time = end_time - start_time
