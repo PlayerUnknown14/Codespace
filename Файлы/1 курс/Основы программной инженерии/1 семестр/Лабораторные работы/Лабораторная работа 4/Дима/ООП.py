@@ -49,7 +49,6 @@ class Game():
                     wordgame.append('*')
     #Цикл для слова. Содержит процесс игры
                 while True:
-                    os.system('cls')
                     print('\n-----------------Определение слова-----------------')
                     print(definition)
                     print('---------------------------------------------------\n')
@@ -76,7 +75,6 @@ class Game():
                     else:
                         os.system('cls')
                         life -= 1
-                        print('Количество жизней: ',life)
                         print('Буквы', letter, 'нет')
                         
                     massletters.append(letter)
