@@ -1,3 +1,5 @@
+# РАССЧИТАТЬ ПО НОВОЙ С НОРМАЛЬНЫМИ ДИАПАЗОНАМИ
+
 import time
 import sys
 import numpy as np
@@ -9,26 +11,30 @@ sys.set_int_max_str_digits(1000000000)
 class Functions():
     def get_data():
         size = int(input("Укажите размер массива: "))
-        left_border = int(input("Укажите наименьшее допустимое число в массиве: "))
-        right_border = int(input("Укажите наибольшее допустимое число в массиве: "))
+        left_border = float(input("Укажите наименьшее допустимое число в массиве: "))
+        right_border = float(input("Укажите наибольшее допустимое число в массиве: "))
         
         return size, left_border, right_border
         
     def generation(size, left_border, right_border):
         global gen_time, massive, operation_type
         
-        if operation_type == "Умножение" or operation_type == "Деление":
-            time_start = time.time()
-            for i in range(int(size)//2):
-                massive.append(randint(left_border, right_border))
-                massive.append(1/randint(left_border, right_border))
-            time_end = time.time()
-            gen_time = float(time_end - time_start)
+        #if operation_type == "Умножение" or operation_type == "Деление" or operation_type == "Сложение":
+        left_border = float(left_border)
+        right_border = float(right_border)
+        time_start = time.time()
+        massive = np.random.uniform(left_border, right_border, size)
+        time_end = time.time()
+        gen_time = float(time_end - time_start)
+        '''
         else:
+            left_border = int(left_border)
+            right_border = int(right_border)
             time_start = time.time()
             massive = np.random.randint(left_border, right_border, size)
             time_end = time.time()
             gen_time = float(time_end - time_start)
+        '''
     
 class Operations():
     def addition():
