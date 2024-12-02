@@ -34,7 +34,8 @@ a_list_of_dictionaries = [
 
 ]
 
-pyexcel.save_as(records=a_list_of_dictionaries, dest_file_name="your_file.xls")import pyexcel
+pyexcel.save_as(records=a_list_of_dictionaries, dest_file_name="your_file.xls")
+import pyexcel
 
 # make sure you had pyexcel-xls installed
 
