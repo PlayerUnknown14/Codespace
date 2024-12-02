@@ -4,7 +4,19 @@ from tkinter import ttk
 import tkinter as tk
 from math import sqrt, log10
 import numpy as np
+import openpyxl
+from openpyxl import Workbook
 
+workbook = Workbook()
+workbook.save(filename="Results.xlsx")
+wb = openpyxl.Workbook()
+sheet = wb.active
+sheets = wb.sheetnames
+print(sheets)
+x1 = sheet.cell(row=1,column=1)
+x1.value = "hello"
+
+wb.save(filename="Results.xlsx")
 root = tk.Tk()
 root.title('AnotherMathOperations')
 root.geometry('500x500')

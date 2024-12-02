@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+import numpy as np
+from math import sqrt, log10
+
+=======
 a_list_of_dictionaries = [
 
     {
@@ -76,3 +81,4 @@ a_list_of_dictionaries = [
 ]
 
 pyexcel.save_as(records=a_list_of_dictionaries, dest_file_name="your_file.xls")
+>>>>>>> e4a2cfe1c860019ad43afd92419d56416faa6a72

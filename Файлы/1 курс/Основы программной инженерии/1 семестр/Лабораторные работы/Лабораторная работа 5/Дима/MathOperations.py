@@ -84,12 +84,6 @@ class Clipboard:
         root.clipboard_append(clipboardmemory)
         root.update()
         
-    def generalcl():
-        text = f'Тип вычислений: {typeofgen}\nВремя генерации массива: {timeofgen}\nВремя вычислений: {timeofoperations}\nКоличество элементов массива: {lengthofgen}\nПолучившееся значение: {totalvalue}\nДиапазон данных:{rangeofgen}'
-        root.clipboard_clear()
-        root.clipboard_append(text)
-        root.update()
-        
     def generalclclear():
         text = f'{typeofgen}\n{timeofgen}\n{timeofoperations}\n{lengthofgen}\n{totalvalue}\n{rangeofgen}'
         root.clipboard_clear()
@@ -399,10 +393,7 @@ clipboardbtn.place(x = 6, y=num*7+20)
 mass_label = ttk.Label(text='')
 mass_label.place(x=6, y=num*8+20)
 
-generalinfobtn = ttk.Button(text='Скопировать\nобщую\nинформцию', command=Clipboard.generalcl)
-generalinfobtn.place(x=6, y=num*14+20)
-
 generalinfobtn = ttk.Button(text='Скопировать\nобщую\nинформцию без текста', command=Clipboard.generalclclear)
-generalinfobtn.place(x=96, y=num*14+20)
+generalinfobtn.place(x=6, y=num*14+20)
 
 root.mainloop()
