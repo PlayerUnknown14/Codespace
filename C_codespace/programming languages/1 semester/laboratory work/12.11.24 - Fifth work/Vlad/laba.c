@@ -3,12 +3,12 @@
 #include <stdlib.h>
 
 void bubblesort(int* mass, int size) {
-    for (int k = 0; k < (size - 1); k++) {
-        for (int l = k + 1; l < size - 1; l++) {
+    for (int k = 0; k < size; k++) {
+        for (int l = size - 1; l > k; l--) {
             if (mass[l] > mass[l-1]) {
-                int temp = mass[l];
-                mass[l] = mass[l-1];
-                mass[l-1] = temp;
+                int temp = mass[l - 1];
+                mass[l - 1] = mass[l];
+                mass[l] = temp;
             }
         }
     }
