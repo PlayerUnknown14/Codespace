@@ -2,8 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int compare(const void *a, const void *b) {
-    return (*(int*)b - *(int*)a);
+void bubblesort(int* mass, int size) {
+    for (int k = 0; k < (size - 1); k++) {
+        for (int l = k + 1; l < size - 1; l++) {
+            if (mass[l] > mass[l-1]) {
+                int temp = mass[l];
+                mass[l] = mass[l-1];
+                mass[l-1] = temp;
+            }
+        }
+    }
 }
 
 int main() {
@@ -19,8 +27,7 @@ int main() {
     printf("Введите %d чисел (через пробел): ", N);
     for(i = 0; i < N; i++)
         scanf("%d", &X[i]);
-    int n = sizeof(X) / sizeof(int);
-    qsort(X, n, sizeof(int), compare);
+    bubblesort(X, N);
     printf("Упорядоченный по убыванию массив: ");
     for (i = 0; i < N; i++)
         {
