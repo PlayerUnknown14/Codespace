@@ -1,12 +1,18 @@
 # РАССЧИТАТЬ ПО НОВОЙ С НОРМАЛЬНЫМИ ДИАПАЗОНАМИ
+# перевести всё в Excel
+# провести кажду операцию с интом и флоатом
 
 import time
 import sys
 import numpy as np
 from random import *
 from math import *
+from openpyxl import *
 
 sys.set_int_max_str_digits(1000000000)
+
+workbook = load_workbook('Отчёт.xlsx')
+sheet = workbook.active
 
 class Functions():
     def get_data():
@@ -17,16 +23,18 @@ class Functions():
         return size, left_border, right_border
         
     def generation(size, left_border, right_border):
-        global gen_time, massive, operation_type
+        global gen_time, massive, operation_type, gen_range
         
         #if operation_type == "Умножение" or operation_type == "Деление" or operation_type == "Сложение":
         left_border = float(left_border)
         right_border = float(right_border)
+        gen_range = f"[{left_border}, {right_border}]"
         time_start = time.time()
         massive = np.random.uniform(left_border, right_border, size)
         time_end = time.time()
         gen_time = float(time_end - time_start)
         '''
+        Это код выше, но тут всё интовое
         else:
             left_border = int(left_border)
             right_border = int(right_border)
@@ -98,6 +106,7 @@ class Operations():
 while True:
     operation_type = ''
     operation_time = 0
+    gen_range = ''
     gen_time = 0
     list_size = 0
     value_total = 0
@@ -106,7 +115,6 @@ while True:
     match opt1.split():
         case ["1"]:
             list_size, left_border, right_border = Functions.get_data()
-            
             opt2 = input("Выберите операцию: \n1 - Сложение\n2 - Вычитание\n3 - Умножение\n4 - Деление\n5 - Квадратный корень\n6 - Возведение во вторую степень\nВвод: ")
             match opt2.split():
                 case ["1"]:
@@ -134,7 +142,7 @@ while True:
                     Functions.generation(list_size, left_border, right_border)
                     Operations.square()
                                                       
-            print(f"\nТип операции - {operation_type}\nРазмер массива - {list_size}\nДиапазон - [{left_border}, {right_border}]\nВремя генерации - {gen_time}\nВремя проведения операции - {operation_time}\nПолученное значение - {value_total}\n")                                                    
+            print(f"\nТип операции - {operation_type}\nРазмер массива - {list_size}\nДиапазон - {gen_range}\nВремя генерации - {gen_time}\nВремя проведения операции - {operation_time}\nПолученное значение - {value_total}\n")                                                    
         case ["2"]:
             print("\nПрограмма закрыта")
             break
