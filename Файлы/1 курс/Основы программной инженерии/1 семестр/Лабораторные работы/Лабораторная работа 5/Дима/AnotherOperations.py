@@ -5,18 +5,12 @@ import tkinter as tk
 from math import sqrt, log10
 import numpy as np
 import openpyxl
-from openpyxl import Workbook
 
-workbook = Workbook()
-workbook.save(filename="Results.xlsx")
-wb = openpyxl.Workbook()
-sheet = wb.active
-sheets = wb.sheetnames
-print(sheets)
-x1 = sheet.cell(row=1,column=1)
-x1.value = "hello"
-
-wb.save(filename="Results.xlsx")
+wb = openpyxl.load_workbook("Results.xlsx")
+wb.create_sheet('Sum')
+wb.create_sheet('Razn')
+wb.save("Results.xlsx")
+ws = wb['Sum']
 root = tk.Tk()
 root.title('AnotherMathOperations')
 root.geometry('500x500')
@@ -29,35 +23,24 @@ def genoption():
         case ['Float']:
             Gen.float()
 def clicked():
+    global ws
     match Comboboxtype.get().split():
         case ["Int"]:
             match Comboboxop.get().split():
                 case ["Сложение"]:
-                    IntOperations.slozhenie()
-                case ["Вычитание"]:
-                    IntOperations.raznost()
-                case ["Умножение"]:
-                    IntOperations.umnozh()
-                case ["Деление"]:
-                    IntOperations.delenie()
-                case ["Корни"]:
-                    IntOperations.korni()
-                case ["Логарифмы"]:
-                    IntOperations.log()
-        case ["Float"]:
-            match Comboboxop.get().split():
-                case ["Сложение"]:
-                    FloatOperations.slozhenie()
-                case ["Вычитание"]:
-                    FloatOperations.raznost()
-                case ["Умножение"]:
-                    FloatOperations.umnozh()
-                case ["Деление"]:
-                    FloatOperations.delenie()
-                case ["Корни"]:
-                    FloatOperations.korni()
-                case ["Логарифмы"]:
-                    FloatOperations.log()
+                    howmuch = int(howmuch_entry.get())
+                    
+                    for i in range(1, howmuch+1):
+                        typeofgen, timeofgen, lengthofgen, rangeofgen, summass = IntOperations.sum()
+                        wb = openpyxl.load_workbook("Results.xlsx")
+                        ws = wb['Sum']
+                        for j in range(1,howmuch+1):
+                            ws.cell(row = i+1, column=j+1) == typeofgen                
+                            ws.cell(row = i+2, column=j+1) == timeofgen  
+                            ws.cell(row = i+3, column=j+1) == lengthofgen  
+                            ws.cell(row = i+4, column=j+1) == summass 
+                            ws.cell(row = i+5, column=j+1) == rangeofgen
+
             
         
 class Gen:
@@ -95,12 +78,15 @@ class IntOperations:
             summass += i
         end_time = time.time()
         timeofgen = end_time - start_time
+        lengthofgen = len(massgen)
+        rangeofgen = f'{min(massgen)};{max(massgen)}'
         match Comboboxtype.get().split():
             case['Int']:
-                typeofgen = 'Int'
+                typeofgen = 'Int Sum'
             case['Float']:
-                typeofgen = 'Float'
-        
+                typeofgen = 'Float Sum'
+        return(typeofgen, timeofgen, lengthofgen, rangeofgen, summass)
+ 
 
 Operationslist = ['Сложение', 'Вычитание', 'Умножение', 'Деление', 'Корни', 'Логарифм']
 Operations_var = StringVar(value=Operationslist[0])
@@ -142,5 +128,8 @@ timemass_label.place(x=6, y=num*6+20)
 
 mass_label = ttk.Label(text='')
 mass_label.place(x=6, y=num*7+20)
+
+howmuch_entry = ttk.Entry()
+howmuch_entry.place(x=350, y=6)
 
 root.mainloop()
