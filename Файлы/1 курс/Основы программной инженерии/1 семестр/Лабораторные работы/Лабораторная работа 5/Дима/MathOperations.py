@@ -262,6 +262,7 @@ class FloatOperations:
         lengthofgen = len(massgen)
         totalvalue = summass
         rangeofgen = f'{min(massgen)};{max(massgen)}'
+        print(massgen)
 
     def raznost():
         global typeofgen, timeofgen, timeofoperations, lengthofgen, totalvalue, rangeofgen
