@@ -1,18 +1,10 @@
-# РАССЧИТАТЬ ПО НОВОЙ С НОРМАЛЬНЫМИ ДИАПАЗОНАМИ
-# перевести всё в Excel
-# провести кажду операцию с интом и флоатом
-
 import time
 import sys
 import numpy as np
 from random import *
 from math import *
-from openpyxl import *
 
 sys.set_int_max_str_digits(1000000000)
-
-workbook = load_workbook('Отчёт.xlsx')
-sheet = workbook.active
 
 class Functions():
     def get_data():
@@ -21,8 +13,19 @@ class Functions():
         right_border = float(input("Укажите наибольшее допустимое число в массиве: "))
         
         return size, left_border, right_border
+
+    def generation_int(size, left_border, right_border):
+        global gen_time, massive, operation_type, gen_range
         
-    def generation(size, left_border, right_border):
+        left_border = int(left_border)
+        right_border = int(right_border)
+        gen_range = f"[{left_border}, {right_border}]"
+        time_start = time.time()
+        massive = np.random.randint(left_border, right_border + 1, size) # в randint() верхняя граница по умолчанию не включается
+        time_end = time.time()
+        gen_time = float(time_end - time_start)
+        
+    def generation_float(size, left_border, right_border):
         global gen_time, massive, operation_type, gen_range
         
         #if operation_type == "Умножение" or operation_type == "Деление" or operation_type == "Сложение":
@@ -33,16 +36,6 @@ class Functions():
         massive = np.random.uniform(left_border, right_border, size)
         time_end = time.time()
         gen_time = float(time_end - time_start)
-        '''
-        Это код выше, но тут всё интовое
-        else:
-            left_border = int(left_border)
-            right_border = int(right_border)
-            time_start = time.time()
-            massive = np.random.randint(left_border, right_border, size)
-            time_end = time.time()
-            gen_time = float(time_end - time_start)
-        '''
     
 class Operations():
     def addition():
@@ -66,8 +59,8 @@ class Operations():
     def multiplication():
         global operation_time, value_total, massive
         
-        time_start = time.time()
         value_total = 1
+        time_start = time.time()
         for i in massive:
             value_total *= i
         time_end = time.time()
@@ -76,8 +69,8 @@ class Operations():
     def division():
         global operation_time, value_total, massive
         
-        time_start = time.time()
         value_total = 1
+        time_start = time.time()
         for i in massive:
             value_total /= i
         time_end = time.time()
@@ -105,6 +98,7 @@ class Operations():
         
 while True:
     operation_type = ''
+    data_type = ''
     operation_time = 0
     gen_range = ''
     gen_time = 0
@@ -119,30 +113,62 @@ while True:
             match opt2.split():
                 case ["1"]:
                     operation_type = "Сложение"
-                    Functions.generation(list_size, left_border, right_border)
+                    data_type = input("Выберите тип данных: \n1 - Целые числа (int)\n2 - Числа с плавающей точкой (float)\nВвод: ")
+                    match data_type.split():
+                        case ["1"]:
+                            Functions.generation_int(list_size, left_border, right_border)
+                            data_type = "int"
+                        case ["2"]:
+                            Functions.generation_float(list_size, left_border, right_border)
+                            data_type = "float"
                     Operations.addition()
                 case ["2"]:
                     operation_type = "Вычитание"
-                    Functions.generation(list_size, left_border, right_border)
+                    data_type = input("Выберите тип данных: \n1 - Целые числа (int)\n2 - Числа с плавающей точкой (float)\nВвод: ")
+                    match data_type.split():
+                        case ["1"]:
+                            Functions.generation_int(list_size, left_border, right_border)
+                            data_type = "int"
+                        case ["2"]:
+                            Functions.generation_float(list_size, left_border, right_border)
+                            data_type = "float"
                     Operations.subtraction()
                 case ["3"]:
                     operation_type = "Умножение"
-                    Functions.generation(list_size, left_border, right_border)
-                    Operations.multiplication()
+                    print("Неизменяемый тип данных для умножения - число с плавающей точкой (float)")
+                    Functions.generation_float(list_size, left_border, right_border)
+                    data_type = "float"
+                    Operations.multiplication()                    
                 case ["4"]:
                     operation_type = "Деление"
-                    Functions.generation(list_size, left_border, right_border)
+                    print("Неизменяемый тип данных для деления - число с плавающей точкой (float)")
+                    Functions.generation_float(list_size, left_border, right_border)
+                    data_type = "float"
                     Operations.division()
                 case ["5"]:
                     operation_type = "Квадратный корень числа"
-                    Functions.generation(list_size, left_border, right_border)
+                    data_type = input("Выберите тип данных: \n1 - Целые числа (int)\n2 - Числа с плавающей точкой (float)\nВвод: ")
+                    match data_type.split():
+                        case ["1"]:
+                            Functions.generation_int(list_size, left_border, right_border)
+                            data_type = "int"
+                        case ["2"]:
+                            Functions.generation_float(list_size, left_border, right_border)
+                            data_type = "float"
                     Operations.square_root()
                 case ["6"]:
                     operation_type = "Квадрат числа"
-                    Functions.generation(list_size, left_border, right_border)
-                    Operations.square()
+                    data_type = input("Выберите тип данных: \n1 - Целые числа (int)\n2 - Числа с плавающей точкой (float)\nВвод: ")
+                    match data_type.split():
+                        case ["1"]:
+                            Functions.generation_int(list_size, left_border, right_border)
+                            data_type = "int"
+                        case ["2"]:
+                            Functions.generation_float(list_size, left_border, right_border)
+                            data_type = "float"     
+                    Operations.square()               
                                                       
-            print(f"\nТип операции - {operation_type}\nРазмер массива - {list_size}\nДиапазон - {gen_range}\nВремя генерации - {gen_time}\nВремя проведения операции - {operation_time}\nПолученное значение - {value_total}\n")                                                    
+            print(f"\nТип операции - {operation_type}\nТип данных - {data_type}\nРазмер массива - {list_size}\nДиапазон - {gen_range}\nВремя генерации - {gen_time}\nВремя проведения операции - {operation_time}\nПолученное значение - {value_total}\n")                                                    
         case ["2"]:
             print("\nПрограмма закрыта")
             break
