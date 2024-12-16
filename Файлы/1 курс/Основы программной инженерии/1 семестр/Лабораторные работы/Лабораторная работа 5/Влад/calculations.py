@@ -28,7 +28,6 @@ class Functions():
     def generation_float(size, left_border, right_border):
         global gen_time, massive, operation_type, gen_range
         
-        #if operation_type == "Умножение" or operation_type == "Деление" or operation_type == "Сложение":
         left_border = float(left_border)
         right_border = float(right_border)
         gen_range = f"[{left_border}, {right_border}]"
@@ -135,13 +134,13 @@ while True:
                     Operations.subtraction()
                 case ["3"]:
                     operation_type = "Умножение"
-                    print("Неизменяемый тип данных для умножения - число с плавающей точкой (float)")
+                    print("\nНеизменяемый тип данных для умножения - число с плавающей точкой (float)")
                     Functions.generation_float(list_size, left_border, right_border)
                     data_type = "float"
                     Operations.multiplication()                    
                 case ["4"]:
                     operation_type = "Деление"
-                    print("Неизменяемый тип данных для деления - число с плавающей точкой (float)")
+                    print("\nНеизменяемый тип данных для деления - число с плавающей точкой (float)")
                     Functions.generation_float(list_size, left_border, right_border)
                     data_type = "float"
                     Operations.division()
@@ -166,8 +165,8 @@ while True:
                         case ["2"]:
                             Functions.generation_float(list_size, left_border, right_border)
                             data_type = "float"     
-                    Operations.square()               
-                                                      
+                    Operations.square()
+            print(f"\nПервые 10 элементов массива: {massive[0:9]}\nМаксимальный элемент - {max(massive)}\nМинимальный элемент - {min(massive)}")
             print(f"\nТип операции - {operation_type}\nТип данных - {data_type}\nРазмер массива - {list_size}\nДиапазон - {gen_range}\nВремя генерации - {gen_time}\nВремя проведения операции - {operation_time}\nПолученное значение - {value_total}\n")                                                    
         case ["2"]:
             print("\nПрограмма закрыта")
