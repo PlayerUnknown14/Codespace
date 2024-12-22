@@ -1,10 +1,9 @@
-// НАПИСАТЬ СВОЙ АЛГОРИТМ СОРТИРОВКИ ЭЛЕМЕНТОВ
 #include <stdio.h>
 #include <stdlib.h>
 
 void bubblesort(int* mass, int size) {
     for (int k = 0; k < size; k++) {
-        for (int l = size - 1; l > k; l--) {
+        for (int l = size - 1-k; l > k; l--) {
             if (mass[l] > mass[l-1]) {
                 int temp = mass[l - 1];
                 mass[l - 1] = mass[l];
@@ -13,6 +12,7 @@ void bubblesort(int* mass, int size) {
         }
     }
 }
+++
 
 int main() {
     int N, i;

@@ -1,19 +1,19 @@
 #include <stdio.h>
 #include <string.h>
-
+#define SIZE 100 
+#include <locale.h>
 
 int main(){
-    char text[100];
-    char word[100];
+    setlocale(LC_ALL, "Rus");
+    char text[SIZE];
+    char word[SIZE];
     char* strpoiner = text;
     int count = 0;
 
-    printf("\nВведите строку текста: ");
-    scanf("%s", &text);
-    puts(text);
-    printf("\nВведите слово: ");
-    scanf("%s", &word);
-    puts(word);
+    puts("\nВведите строку текста: ");
+    gets(text);
+    puts("\nВведите слово: ");
+    gets(word);
 
     while ((strpoiner = strstr(strpoiner, word)) != NULL)
     {
