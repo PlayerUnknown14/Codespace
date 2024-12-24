@@ -5,20 +5,20 @@
    #include <codecvt>
 
    int main() {
-       // Открываем файл в бинарном режиме
+       // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
        std::wifstream file("test.txt", std::ios::binary);
        
-       // Устанавливаем кодировку UTF-8
+       // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ UTF-8
        file.imbue(std::locale(file.getloc(), new std::codecvt_utf8<wchar_t>));
 
        if (!file) {
-           std::wcerr << "Ошибка при открытии файла!" << std::endl;
+           std::wcerr << "!" << std::endl;
            return 1;
        }
 
        std::wstring line;
        while (std::getline(file, line)) {
-           std::wcout << line << std::endl; // Выводим содержимое файла
+           std::wcout << line << std::endl; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
        }
 
        file.close();
