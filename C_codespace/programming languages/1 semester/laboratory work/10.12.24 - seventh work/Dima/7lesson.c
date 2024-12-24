@@ -7,7 +7,7 @@ const int max = 20;
 double a[100];
 
 
-void main(){
+int main(){
 
     srand((unsigned)time(0));
 
@@ -17,8 +17,13 @@ void main(){
         int u = (double)rand() / (RAND_MAX + 1) * (max - min) + min;
         a[i] = u;
         int value = *(a + i);  
-        printf("a[%i]: %lf, adress = %p\t значение = %d\n",i, a[i], address, value);
+        printf("a[%i]: %lf, adress = %d\n",i, a[i], address);
     }
-
+    for (int i = 0; i<N; i++){
+        int value = *(a+N-i-1);
+        printf("значение a[%i] = %d\n",i, value);
+    }
+    return 0;
 }
 //Второй массив с выведением ячейки через указатель
+//Вывести вверх ногами
