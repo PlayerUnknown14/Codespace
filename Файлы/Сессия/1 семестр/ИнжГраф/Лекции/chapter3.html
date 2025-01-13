@@ -1,0 +1,927 @@
+<html>
+<head>
+<title>Цифровой дифференциальный анализатор (ЦДА)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<link rel="stylesheet" href="main.css" type="text/css">
+</head>
+<body bgcolor="#FFFFFF" text="#000000">
+<table width="550" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+    <td class="heading1">Цифровой дифференциальный анализатор (ЦДА)</td>
+  </tr>
+  <tr>
+    <td>
+<p>Современные устройства вывода изображения (дисплеи) имеют растровую природу. 
+        Отсюда возникает проблема репрезентации изображения на растровом устройстве 
+        (Рис.25). Например, разложение в растр отрезка может принимать следующие 
+        варианты: Один из методов разложения отрезка в растр состоит в решении 
+        дифференциального уравнения, описывающего этот процесс.</p>
+      <p align="center"><img src="chapter3/figure1.gif" width="377" height="191"> 
+      </p>
+      <p align="center">Рис. 25</p>
+      <p> Для прямой линии имеем:</p>
+      <p><img src="chapter3/figure2.gif" width="86" height="50"></p>
+      <p>или </p>
+      <p><img src="chapter3/figure3.gif" width="112" height="58"></p>
+      <p> Решение последнего дифференциального уравнения представляется в виде:</p>
+      <p> y<sub>i +1</sub> = y<sub>i</sub> + <img src="chapter3/delta.gif" width="12" height="13">y,</p>
+      <p><img src="chapter3/figure4.gif" width="182" height="58"></p>
+      <p> 
+      <p> где (x<sub>1</sub>, y<sub>1</sub>) и (x<sub>2</sub>, y<sub>2</sub>) - начальная и конечная точка отрезка раскладываемого 
+        в растр. </p>
+      <p> Фактически уравнение представляет собой рекуррентное соотношение для 
+        последовательности значений y вдоль нужного отрезка.</p>
+      <p> Этот метод, используемый для разложения растровой графике отрезков, 
+        называется цифровым дифференциальным анализатором (ЦДА). В простом ЦДА, 
+        <img src="chapter3/delta.gif" width="12" height="13">y либо <img src="chapter3/delta.gif" width="12" height="13">x 
+        (большее из приращений) выбирается в качестве единицы растра.</p>
+      <p class="heading2"> <a name="all"></a>Алгоритм, работающий во всех квадрантах</p>
+      <p> 1. Концы отрезка (x<sub>1</sub>, y<sub>1</sub>) и (x<sub>2</sub>, y<sub>2</sub>) не совпадают. </p>
+      <p> integer - функция преобразования вещественного числа в целое.</p>
+      <p> Функция integer означает взятие целой части, то есть integer (- 8, 5)= 
+        - 9, а не -8.</p>
+      <p> В алгоритме используется именно такая функция.</p>
+      <p> sign- функция, возвращающая -1, 0, 1 для отрицательного, нулевого и 
+        положительного аргумента соответственно. </p>
+      <p> ПРОЦЕДУРА</p>
+      <p> Аппроксимируем длину отрезка</p>
+      <p> 
+      <pre>
+<b>if</b> abs(x<sub>2</sub> - x<sub>1</sub>) abs(y<sub>2</sub> - y<sub>1</sub>) then
+  Длина = abs(x<sub>2</sub> - x<sub>1</sub>)
+<b>else</b>
+  Длина = abs(y<sub>2</sub> - y<sub>1</sub>)
+<b>end</b> <b>if</b>
+</pre>
+      <p>полагаем большее из приращений <img src="chapter3/delta.gif" width="12" height="13">x, 
+        <img src="chapter3/delta.gif" width="12" height="13">y равным единице 
+        растра</p>
+      <p><img src="chapter3/figure5.gif" width="98" height="46"> </p>
+      <p><img src="chapter3/figure6.gif" width="100" height="46"></p>
+      <p> Округляем величины, а не отбрасываем дробную часть, использование знаковой 
+        функции делает алгоритм, пригодным для всех квадрантов .</p>
+      <p> 
+      <pre>x = x<sub>1</sub> + 0. 5 sign(<img src="chapter3/delta.gif" width="12" height="13">x) 
+y = y<sub>1</sub> + 0. 5 sign(<img src="chapter3/delta.gif" width="12" height="13">y)
+</pre>
+      <p>Начало основного цикла</p>
+      <p> 
+      <pre>
+i = 1
+<b>while</b> (i Длина)
+    plot (integer(x), integer(y))
+    x = x +<img src="chapter3/delta.gif" width="12" height="13"> x
+    y = y + <img src="chapter3/delta.gif" width="12" height="13">y
+    i = i + 1 
+<b>end</b> <b>while</b>
+  finish
+</pre>
+      Пример, иллюстрирующий работу алгоритма (Рис.26). Рассмотрим отрезок, проходящий 
+      из точки с координатами (0,0) в точку с координатами (5,5). Используем алгоритм 
+      ЦДА для разложения отрезка в растр. 
+      <p> Начальные условия:</p>
+      <p> x<sub>1</sub>=0, y<sub>1</sub>=0, y<sub>2</sub>=5, x<sub>2</sub>=5, Длина = 5, <img src="chapter3/delta.gif" width="12" height="13">x 
+        = 1, <img src="chapter3/delta.gif" width="12" height="13">y =1, x = 0. 
+        5, y = 0. 5</p>
+      <p> Результаты пошагового выполнения основного цикла:</p>
+      <p> 
+      <table width="200" border="1" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td>i</td>
+          <td>Plot</td>
+          <td>x</td>
+          <td>y</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>0.5</td>
+          <td>0.5</td>
+        </tr>
+        <tr> 
+          <td>1</td>
+          <td>(0, 0)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>1.5</td>
+          <td>1.5</td>
+        </tr>
+        <tr> 
+          <td>2</td>
+          <td>(1, 1)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>2.5</td>
+          <td>2.5</td>
+        </tr>
+        <tr> 
+          <td>3</td>
+          <td>(2, 2)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>3.5</td>
+          <td>3.5</td>
+        </tr>
+        <tr> 
+          <td>4</td>
+          <td>(3, 3)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>4.5</td>
+          <td>4.5</td>
+        </tr>
+        <tr> 
+          <td>5</td>
+          <td>(4, 4)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>5.5</td>
+          <td>5.5</td>
+        </tr>
+      </table>
+      <p align="center"><img src="chapter3/figure7.gif" width="203" height="201"></p>
+      <p align="center">Рис. 26. Результат работы ЦДА в 1-квадранте<br>
+      </p>
+      <p>Заметим, что конечные точки отрезка определены точно и выбранные пикселы 
+        равномерно распределены вдоль отрезка. Внешний вид прямой вполне удовлетворителен. 
+      </p>
+      <p> Однако, если начальным значениям переменной i - сделать 0, вместо 1, 
+        то окажется активированным пиксел с координатами (5,5), что нежелательно. 
+        Если адрес пиксела задан целыми координатами левого нижнего угла, то активация 
+        этого пиксела даст явно неверную конечную точку отрезка (Рис.1).</p>
+      <p> Вдобавок, при вычерчивании серии последовательных отрезков пиксел (5,5) 
+        будет активирован дважды: в конце данного отрезка и в начале следующего.</p>
+      <p> Такой пиксел может выглядеть как более яркий или иметь иной (быть может, 
+        несоответствующий) цвет.</p>
+      <p> ПРИМЕР РАБОТЫ АЛГОРИТМА В 3- КВАДРАНТЕ</p>
+      <p> Отрезок: начало (0,0), конец (-8,-4) (Рис.27).</p>
+      <p> Начальные условия.</p>
+      <p> x<sub>1</sub>=0</p>
+      <p>x<sub>2</sub>= - 8</p>
+      <p>Длина = 8</p>
+      <p> y<sub>1</sub>=0</p>
+      <p>y<sub>2</sub>= - 4</p>
+      <p><img src="chapter3/delta.gif" width="12" height="13">x = - 1</p>
+      <p><img src="chapter3/delta.gif" width="12" height="13">y = - 0. 5</p>
+      <p> x = - 0. 5</p>
+      <p>y = - 0. 5</p>
+      <p> Результаты таковы : </p>
+      <p> 
+      <table width="200" border="1" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td>i</td>
+          <td>Plot</td>
+          <td>x</td>
+          <td>y</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-0.5</td>
+          <td>-0.5</td>
+        </tr>
+        <tr> 
+          <td>1</td>
+          <td>(-1,-1)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-1.5</td>
+          <td>-1.5</td>
+        </tr>
+        <tr> 
+          <td>2</td>
+          <td>(-2, -1)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-2.5</td>
+          <td>-1.5</td>
+        </tr>
+        <tr> 
+          <td>3</td>
+          <td>(-3, -2)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-3.5</td>
+          <td>-2.0</td>
+        </tr>
+        <tr> 
+          <td>4</td>
+          <td>(-4, -2)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-4.5</td>
+          <td>-2.5</td>
+        </tr>
+        <tr> 
+          <td>5</td>
+          <td>(-5, -3)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-5.5</td>
+          <td>-3.0</td>
+        </tr>
+        <tr> 
+          <td>6</td>
+          <td>(-6, -3)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-6.5</td>
+          <td>-3.5</td>
+        </tr>
+        <tr> 
+          <td>7</td>
+          <td>(-7, -4)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-7.5</td>
+          <td>-4.0</td>
+        </tr>
+        <tr> 
+          <td>8</td>
+          <td>(-8, -4)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-8.5</td>
+          <td>-4.5</td>
+        </tr>
+      </table>
+      <p align="center"><img src="chapter3/figure8.gif" width="309" height="151"></p>
+      <p align="center">Рис. 27</p>
+      <p> Несмотря на то, что результаты, представленные на (Рис. 27) выглядят 
+        вполне приемлемыми, анализ отрезков, проведенных из т. (0, 0) в т. (-8, 
+        4) и в т. (8, -4) показывает, что разложенный в растр отрезок лежит по 
+        одну сторону от реального, и что на одном из концов отрезка, появляется 
+        лишняя точка, то есть результат работы алгоритма зависит от ориентации. 
+        Следовательно, точность в конечных точках отрезка ухудшается.</p>
+      <p> Далее, если вместо взятия целой части, использовать округление до ближнего 
+        целого, то результаты снова получатся разными.</p>
+      <p> Таким образом, либо нужно использовать более сложный и более медленный 
+        алгоритм, либо надо отступится от требования максимальной точки аппроксимации.</p>
+      <p> Вдобавок предложенный алгоритм имеет тот недостаток, что он использует 
+        вещественную арифметику. </p>
+      <p> <span class="heading2"><a name="Bresenhem"></a>Алгоритм Брезенхэма</span></p>
+      <p> Алгоритм выбирает оптимальные растровые координаты для представления 
+        отрезка. В процессе работы одна из координат либо x, либо y (в зависимости 
+        от углового коэффициента) - изменяется на единицу. Изменение другой координаты 
+        (либо на 0, либо на 1) зависит от расстояния между действительным положением 
+        отрезка и ближайшими координатами сетки. Такое расстояние мы назовем ошибкой.</p>
+      <p align="center"><img src="chapter3/figure9.gif" width="281" height="250"></p>
+      <p align="center">Рис. 28</p>
+      <p> Алгоритм построен так, что требуется проверять лишь знак этой ошибки. 
+        На рис. 28 это иллюстрируется для отрезка в первом октанте, т.е. для отрезка 
+        с угловым коэффициентом лежащим в диапазоне от 0 до 1 .</p>
+      <p> <img src="chapter3/figure10.gif" width="98" height="50">(ошибка 0)</p>
+      <p> <img src="chapter3/figure11.gif" width="102" height="50">(ошибка &lt; 
+        0) </p>
+      <p> Инициализировать ошибку в -1/2 </p>
+      <p><img src="chapter3/figure12.gif" width="186" height="52"></p>
+      <p> - Основная идея алгоритма Брезенхэма</p>
+      <p> Из рисунка можно заметить, что если угловой коэффициент отрезка больше 
+        чем 1/2, то его пересечение с прямой x = 1, будет расположено ближе к 
+        прямой y=1, чем к прямой y=0. Следовательно, точка растра с координатами 
+        (1,1) лучше аппроксимирует ход отрезка, чем т.(1,0) Если угловой коэффициент 
+        1/2, то верно обратное.</p>
+      <p> Для углового коэффициента, равного 1/2, нет какого либо предпочтительного 
+        варианта. В данном случае алгоритм выбирает пиксел с координатами (1,1). 
+        Не все отрезки проходят через точки растра. Подобная ситуация представлена 
+        на (Рис.29), где отрезок с тангенсом угла наклона 3/8 сначала проходит 
+        через пиксел с координатами (0,0) и последовательно пересекает три пиксела.</p>
+      <p align="center"><img src="chapter3/figure13.gif" width="233" height="98"></p>
+      <p align="center">Рис. 29</p>
+      <p> Так как желательно проверять только знак ошибки, то она первоначально 
+        устанавливается равной &quot;-1/2&quot; . Таким образом, если угловой 
+        коэффициент отрезка больше или равен 1/2, то величина ошибки в следующей 
+        точке растра с координатами (1, 0) может быть вычислена как:</p>
+      <p> e = e + m, где m -угловой коэффициент.</p>
+      <p> В нашем случае при начальном значении ошибки &quot;-1/2&quot;</p>
+      <p> e = -1/2 + 3/8 = -1/8</p>
+      <p> Так как e &lt; 0, то отрезок пройдет ниже середины пиксела. Следовательно 
+        пиксел на горизонтальном уровне лучше аппроксимирует положение отрезка, 
+        поэтому y не увеличивается. Аналогично вычисляем ошибку .</p>
+      <p> e = -1/8 + 3/8 = 1/4 в т. растра (2, 0)</p>
+      <p> Теперь e &gt;0, а значит отрезок пройдет выше средней точки. Растровый 
+        элемент (2,1) со следующей по величине координатой y лучше аппроксимирует 
+        положение отрезка. Следовательно, y увеличивается на 1. Прежде чем рассматривать 
+        следующий пиксел, необходимо откорректировать ошибку вычитанием из нее 
+        1.</p>
+      <p> e = 1/4 - 1 = -3/4</p>
+      <p> Продолжение вычислений для следующего пиксела дает:</p>
+      <p> e = -3/4 + 3/8 = -3/8</p>
+      <p> Так как e 0, то y не увеличивается. Из всего сказанного следует, что 
+        ошибка - это интервал, отсекаемый по оси y, рассматриваем отрезок в каждом 
+        растровом элементе относительно &quot;-1/2&quot; .</p>
+      <p> Рассмотрим алгоритм Брезенхема для первого октанта, т.е. для случая 
+        0&lt;=<img src="chapter3/delta.gif" width="12" height="13">y&lt;=<img src="chapter3/delta.gif" width="12" height="13">x.</p>
+      <p class="heading2"> <a name="first"></a>Алгоритм Брезенхема разложения 
+        в растр отрезка для первого октанта</p>
+      <p> Предполагается, что концы отрезка (x<sub>1</sub> y<sub>1</sub>) и (x<sub>2</sub> y<sub>2</sub>) не совпадает.</p>
+      <p> integer - функция преобразования в целое</p>
+      <p> x<sub>1</sub> y<sub>1</sub> <img src="chapter3/delta.gif" width="12" height="13">x<sub>1</sub> <img src="chapter3/delta.gif" width="12" height="13">y<sub>1</sub> 
+        - целые</p>
+      <p> е - вещественное</p>
+      <p> Инициализация переменных:</p>
+      <p> x = x<sub>1</sub><img src="chapter3/delta.gif" width="12" height="13"> x = x<sub>2</sub> 
+        - x<sub>1</sub></p>
+      <p> y = y<sub>1</sub> <img src="chapter3/delta.gif" width="12" height="13">y = y<sub>2</sub> 
+        - y<sub>1</sub> </p>
+      <p> Инициализация ошибки е с поправкой на 1/2 пиксела.</p>
+      <p><img src="chapter3/figure14.gif" width="100" height="50"></p>
+      <p> Начало основного цикла.</p>
+      <p> 
+      <pre>
+for i = 1 to <img src="chapter3/delta.gif" width="12" height="13"> x
+    Plot (x, y)
+    <b>while</b> (e 0)
+    y = y + 1
+    e = e - 1
+    <b>end</b> <b>while</b>
+x = x - 1
+<img src="chapter3/figure15.gif" width="82" height="50">
+next i
+finish.
+</pre>
+      <p align="center"> Блок схема алгоритма</p>
+      <p align="center"><img src="chapter3/figure16.gif" width="409" height="384"></p>
+      <p> Пример: P = (0,0), P = (5,5)</p>
+      <p> Начальные условия: x = 0 <img src="chapter3/delta.gif" width="12" height="13">x 
+        = 5 e = 1 - 1/2 = 1/2</p>
+      <p> y = 0 <img src="chapter3/delta.gif" width="12" height="13">y = 5</p>
+      <p> Результаты пошагового выполнения основного цикла (Рис.30).</p>
+      <p> 
+      <table width="200" border="1" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td>i</td>
+          <td>Plot</td>
+          <td>e</td>
+          <td>x</td>
+          <td>y</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>1/2</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>1</td>
+          <td>(0, 0)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-1/2</td>
+          <td>0</td>
+          <td>1</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>1/2</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr> 
+          <td>2</td>
+          <td>(1, 1)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-1/2</td>
+          <td>1</td>
+          <td>2</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>1/2</td>
+          <td>2</td>
+          <td>2</td>
+        </tr>
+        <tr> 
+          <td>3</td>
+          <td>(2, 2)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>1/2</td>
+          <td>3</td>
+          <td>3</td>
+        </tr>
+        <tr> 
+          <td>4</td>
+          <td>(3, 3)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>1/2</td>
+          <td>4</td>
+          <td>4</td>
+        </tr>
+        <tr> 
+          <td>5</td>
+          <td>(4, 4)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>1/2</td>
+          <td>5</td>
+          <td>5</td>
+        </tr>
+      </table>
+      <p align="center"><img src="chapter3/figure17.gif" width="292" height="302"></p>
+      <p align="center">Рис. 30</p>
+      <p> Заметим, что точка растра с координатами (5,5) не активирована. Эту 
+        точку можно активировать изменив условия цикла: for-next на 0 to <img src="chapter3/delta.gif" width="12" height="13">x 
+        .</p>
+      <p> Активацию точки (0, 0) можно устранить, если поставить оператор Plot 
+        непосредственно перед строкой next j.</p>
+      <p class="heading2"> <a name="whole"></a>Целочисленный алгоритм Брезенхема 
+        для первого октанта</p>
+      <p> Начальные условия: P1 = (x<sub>1</sub>, y<sub>1</sub>) P2 = (x<sub>2</sub>,y<sub>2</sub>) не совпадают, все переменные 
+        целые.</p>
+      <p> x = x<sub>1</sub></p>
+      <p> y = y<sub>1</sub></p>
+      <p> <img src="chapter3/delta.gif" width="12" height="13">x = x<sub>2</sub> - x<sub>1</sub> </p>
+      <p> <img src="chapter3/delta.gif" width="12" height="13">y = y<sub>2</sub> - y<sub>1</sub></p>
+      <p>Инициализируем e с поправкой на 1/2 пиксел.</p>
+      <p><img src="chapter3/figure18.gif" width="301" height="56"></p>
+      <p> Начало основного цикла.</p>
+      <pre>
+for i = 1 to <img src="chapter3/delta.gif">x
+Plot (x, y) 
+<b>while</b> (e 0)
+<img src="chapter3/delta.gif">y = y +1
+e = e - 2<img src="chapter3/delta.gif"> x
+<b>end</b> <b>while</b>
+x = x + 1
+e = e - 2 <img src="chapter3/delta.gif">y
+next i
+finish
+</pre>
+      Пример (Рис.31). 
+      <pre>
+х = 0 <img src="chapter3/delta.gif">х = 7 <img src="chapter3/delta.gif">y = 3
+Н.У, (0, 0) -&gt;(7, 3)
+</pre>
+      <p> 
+      <table width="200" border="1" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td>i</td>
+          <td>Plot</td>
+          <td>e</td>
+          <td>x</td>
+          <td>y</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-1</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>1</td>
+          <td>(0, 0)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-1 &lt; 0</td>
+          <td>1</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>5</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>2</td>
+          <td>(1, 0)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>5 &gt; 0</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-9 &gt; 0</td>
+          <td>2</td>
+          <td>1</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-3</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>3</td>
+          <td>(2, 1)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-3 &lt; 0</td>
+          <td>3</td>
+          <td>1</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>3</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>4</td>
+          <td>(3, 1)</td>
+          <td>3 &gt; 0</td>
+          <td>3</td>
+          <td>2</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-11 &lt; 0</td>
+          <td>4</td>
+          <td>2</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-5</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>5</td>
+          <td>(4, 2)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-5 &lt; 0</td>
+          <td>5</td>
+          <td>2</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>1</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>6</td>
+          <td>(5, 2)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>1 &gt; 0</td>
+          <td>5</td>
+          <td>3</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-13&lt;0</td>
+          <td>6</td>
+          <td>3</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-7</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>7</td>
+          <td>(6.3)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+      <p>Блок схема алгоритма</p>
+      <p align="center"><img src="chapter3/figure20.gif" width="379" height="372"></p>
+      <p class="heading2"> <a name="common"></a>Общий алгоритм Брезенхема</p>
+      <p> Чтобы реализация алгоритма Брезенхема была полной, необходимо обрабатывать 
+        отрезки во всех октантах. Модификацию легко сделать, учитывая в алгоритме 
+        номер квадранта, в котором лежит отрезок и его угловой коэффициент. </p>
+      <p> Когда абсолютная величина углового коэффициента больше 1, у - постоянно 
+        изменяется на 1, а критерий ошибки Брезенхема используется для принятия 
+        решения об изменении величины х. </p>
+      <p> Выбор постоянно изменяющийся (на +1 или -1) координаты зависят от квадранта 
+        (Рис. 32).</p>
+      <p align="center"><img src="chapter3/figure21.gif" width="498" height="298"></p>
+      <p align="center">Рис. 32</p>
+      <p class="heading2"> <a name="wholecommon"></a>Обобщенный целочисленный 
+        алгоритм Брезенхема для всех квадрантов</p>
+      <p> Начальные условия: </p>
+      <p> Точки P1 = (x<sub>1</sub>, y<sub>1</sub>) P2 = (x<sub>2</sub>,y<sub>2</sub>) не совпадают.</p>
+      <p> Переменные целые</p>
+      <p> Sign возвращает -1, 0, 1 для a &lt; 0, a = 0, a &gt; 0 соответственно.</p>
+      <p> Инициализация переменных</p>
+      <pre>x = x<sub>1</sub>
+y = y<sub>1</sub>
+<img src="chapter3/delta.gif" width="12" height="13">x = abs (x<sub>2</sub> - x<sub>1</sub>)
+<img src="chapter3/delta.gif" width="12" height="13">y = abs (y<sub>2</sub> - y<sub>1</sub>)
+S1 = Sign(x<sub>2</sub> - x<sub>1</sub>)
+S2 = Sign(y<sub>2</sub> - y<sub>1</sub>)
+</pre>
+      <p>Обмен значений x и y в зависимости от углового коэффициента наклона отрезка.</p>
+      <pre>
+<b>if</b> <img src="chapter3/delta.gif" width="12" height="13">y &gt; <img src="chapter3/delta.gif" width="12" height="13">x then
+ Врем = <img src="chapter3/delta.gif" width="12" height="13">x
+<img src="chapter3/delta.gif" width="12" height="13">x = <img src="chapter3/delta.gif" width="12" height="13">y
+<img src="chapter3/delta.gif" width="12" height="13">y = Врем
+Обмен = 1
+<b>else</b>
+Обмен = 0
+<b>end</b> <b>if</b>
+</pre>
+      <p> Инициализация e с поправкой на 1/2 пиксела</p>
+      <p>e =2<img src="chapter3/delta.gif" width="12" height="13">y - <img src="chapter3/delta.gif" width="12" height="13">x</p>
+      <p> Основной цикл</p>
+      <pre> for i=1 to <img src="chapter3/delta.gif" width="12" height="13">x
+Plot (x, y)
+<b>while</b> (e >= 0)
+<b>if</b> Обмен = 1 then
+ x = x + S1
+<b>else</b>
+ y = y + S2
+<b>end</b> <b>if</b>
+ e= e - 2 <img src="chapter3/delta.gif" width="12" height="13">x
+<b>end</b> <b>while</b> (e >= 0)
+<b>if</b> Обмен = 1 then
+ y = y + S2
+<b>else</b>
+ x = x + S1
+<b>end</b> <b>if</b>
+e = e - 2 <img src="chapter3/delta.gif" width="12" height="13">x
+next i
+finish
+</pre>
+      <p> Пример: Обобщенный алгоритм Брезенхема (Рис. 33).</p>
+      <p align="center"><img src="chapter3/figure22.gif" width="332" height="173"></p>
+      <p align="center">Рис. 33</p>
+      <p> Начальные условия: P1 = (0,0) P2 = (-8,-4)</p>
+      <p> x=0 x=8 S1= -1 Обмен=0</p>
+      <p> y=0 y=0 S2= -1 e = 0</p>
+      <p> 
+      <table width="200" border="1" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td>i</td>
+          <td>Plot</td>
+          <td>e</td>
+          <td>x</td>
+          <td>y</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+        <tr> 
+          <td>1</td>
+          <td>(0, 0)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-16</td>
+          <td>0</td>
+          <td>-1</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-8</td>
+          <td>-1</td>
+          <td>-1</td>
+        </tr>
+        <tr> 
+          <td>2</td>
+          <td>(-1, -1)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>0</td>
+          <td>-8</td>
+          <td>-1</td>
+        </tr>
+        <tr> 
+          <td>3</td>
+          <td>(-2, -1)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-16</td>
+          <td>-2</td>
+          <td>-2</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-8</td>
+          <td>-3</td>
+          <td>-2</td>
+        </tr>
+        <tr> 
+          <td>4</td>
+          <td>(-3, -2)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>0</td>
+          <td>-4</td>
+          <td>-2</td>
+        </tr>
+        <tr> 
+          <td>5</td>
+          <td>(-4, -2)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-16</td>
+          <td>-4</td>
+          <td>-3</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-8</td>
+          <td>-5</td>
+          <td>-3</td>
+        </tr>
+        <tr> 
+          <td>6</td>
+          <td>(-5, -3)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>0</td>
+          <td>-6</td>
+          <td>-3</td>
+        </tr>
+        <tr> 
+          <td>7</td>
+          <td>(-6, -3)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-16</td>
+          <td>-6</td>
+          <td>-4</td>
+        </tr>
+        <tr> 
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>-8</td>
+          <td>-7</td>
+          <td>-4</td>
+        </tr>
+        <tr> 
+          <td>8</td>
+          <td>(-7, -4)</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+      <p align="center"><img src="chapter3/figure23.gif" width="550" height="654"></p>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+</body>
+</html>
