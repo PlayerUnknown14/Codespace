@@ -1,0 +1,108 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1251">
+<title>Генерация изображения кривой на растровом устройстве</title>
+<style><!--
+-->
+</style>
+<link rel="stylesheet" href="main.css" type="text/css">
+</head>
+<body lang=RU bgcolor="#FFFFFF">
+<table width="550" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+    <td class="heading1">Генерация изображения кривой на растровом устройстве</td>
+  </tr>
+  <tr>
+    <td>
+<ol start=1 type=1>
+        <li>Пусть кривая задана в виде <i>y = f (x)</i>.</li>
+        <li>На основании теоремы доказанной Ву и Рокнэ о том, что для любой функции  
+          <i>f (x , y) = 0</i> заданной на интервале [a , b] и удовлетворяющей 
+          условиям:</li>
+      </ol>
+      <p><span style='font-size:12.0pt'> </span><sub><img src="chapter5/image001.gif"></sub></p>
+      <p>знак <sub><img src="chapter5/image002.gif"></sub> не меняется и ее разложение 
+        в растр в любой точке может принимать одну из четырех форм (Рис. 40),</p>
+      <div align="center">
+        <p><img src="chapter5/image003.gif"> </p>
+        <p>Рис. 40</p>
+      </div>
+      <p>при этом существует некоторая точка <span class=symbol>x</span><span class=symbol>&Icirc;</span>[ a , b ], такая, что случаи (1)  и (4) 
+      не могут быть на интервале  [ a , <span class=symbol>x</span> ] не на интервале  [ <span class=symbol>x</span> , b ] одновременно. 
+      <p class=MsoBodyTextIndent>Алгоритмы вывода отрезка и дуги окружности, разработанные 
+        Брезенхэмом, используют целочисленную арифметику, что является более привлекательным. 
+        Алгоритмы  используют некоторый целочисленный параметр, пропорционального 
+        отклонения точки растра от  заданной линии (прямой или дуги). Используя 
+        подход Брезенхема и теорему Ву и Рокнэ мы можем модифицировать алгоритм  
+        для вывода кривой, минимизируя некоторые вещественные вычисления алгоритма.</p>
+      <p align="center"><img src="chapter5/image004.jpg" width="337" height="252"> 
+      <p align="center">Рис. 41
+      <p>Будем считать 
+        , что сделан i - 1 шаг для визуализации кривой. И требуется сделать i 
+        - 1 шаг, где x<sub>i</sub> =x<sub>i</sub><sub>-1</sub> + 2 (Рис.41).</p>
+      <p>Будем считать , что dy<sub>i</sub> / dx<sub>i</sub><sub> </sub><span class=symbol>&pound;</span> 1, в другом случае 
+        рассуждения аналогичны.</p>
+      <p>Чтобы выполнить  i - шаг из точек L , M , N необходимо выбрать наилучшее 
+        приближение к кривой. Очевидно ,если  1 <span class=symbol>&sup3;</span> dy/dx <span class=symbol>&sup3;</span>1/<sub><img width=24 height=23
+src="chapter5/image007.gif"></sub>, то выбираем  L или M;   и если 1/<sub><img width=24 height=23 src="chapter5/image007.gif"></sub> 
+        <span class=symbol>&sup3;</span> dy/dx <span class=symbol>&sup3;</span>0, то выбираем  
+        M или N.</p>
+      <br>
+      <p>Запишем выражение для <i>s</i> и <i>t</i>:</p>
+      <p><i>s</i> = f ( x <sub>j-1</sub> +2<sub> </sub>) - 
+        y <sub>j-1 </sub><br><i>t</i> 
+        = y <sub>j-1</sub>+2 -f ( x <sub>j-1</sub> +2<sub> </sub>)</p>
+      Введем  пропорциональный параметр отклонения пиксела от кривой D: 
+      <p>D<sub> j</sub>= <i>s-t</i> = f ( x <sub>j-1</sub> +2<sub> </sub>) - y 
+        <sub>j-1</sub>- y <sub>j-1</sub>-2 + f ( x <sub>j-1</sub> +2<sub> </sub>) 
+        = 2 f ( x <sub>j-1</sub> +2<sub> </sub>) -2 y <sub>j-1</sub>-2</p>
+      <p>заменим i на i+1 , следовательно </p>
+      <p>D<sub> j+1</sub>= 2 f ( x <sub>j</sub> +2<sub> </sub>) -2 y <sub>j</sub>-2</p>
+      <p>вычтем из D<sub> </sub><sub>j</sub><sub>+1     </sub>D<sub> </sub><sub>j</sub><sub>  
+        </sub>, следовательно</p>
+      <p>D<sub> </sub><sub>j</sub><sub>+1</sub>-D<sub> </sub><sub>j</sub><sub> 
+        </sub>= 2 f ( x <sub>j</sub> + 2<sub> </sub>) -2 y <sub>j</sub><sub> </sub>- 
+        2 -2 f ( x <sub>j</sub><sub>-1</sub>+ 2<sub> </sub>) -2 y <sub>j</sub><sub>-1</sub>+2</p>
+      <p>D<sub> </sub><sub>j</sub><sub>+1</sub>= D<sub> </sub><sub>j</sub>+ 2f 
+        (x<sub>j</sub>+2) - 2( y <sub>j</sub>-y <sub>j</sub><sub>-1 </sub>) - 
+        2f ( x <sub>j</sub><sub>-1</sub> + 2<sub> </sub>)</p>
+      <p>D<sub> </sub><sub>j</sub><sub>+1</sub>= D<sub> </sub><sub>j</sub>+2<sub><img
+src="chapter5/image008.gif"></sub>f <sub>j</sub><sub>+1</sub> - 2( y <sub>j</sub><sub> 
+        </sub>- y <sub>j</sub><sub>-1 </sub>) , где </p>
+      <p><sub> </sub><sub><img
+src="chapter5/image008.gif"></sub> f <sub>j</sub><sub>+1</sub>= f (x<sub>j</sub>+2) 
+        - f (x<sub>j</sub>+2) = f (x<sub>j</sub><sub>+1</sub>) - f (x<sub>j</sub>)                
+      </p>
+      <p>Тогда из точек L  и M если D<sub> </sub><sub>j</sub><sub>  </sub><span class=symbol>&sup3;</span>1 выбираем 
+        точку L.</p>
+      <p>y <sub>j</sub>= y <sub>j-1</sub>+2  <span class=symbol>&THORN;</span> 
+        D<sub> j+1</sub>= D<sub> j</sub>+2<sub><img src="chapter5/image008.gif"></sub>f 
+        <sub>j+1</sub> - 4 </p>
+      <p>если D<sub> </sub><sub>j</sub><sub> </sub> <span class=symbol>&pound;</span><sub> </sub>1 выбираем точку M,     y 
+        <sub>j</sub>= y <sub>j</sub><sub>-1</sub>+1  <span class=symbol>&THORN;</span> D<sub> </sub><sub>j</sub><sub>+1</sub>= 
+        D<sub> </sub><sub>j</sub>+2<sub><img src="chapter5/image008.gif"></sub>f 
+        <sub>j</sub><sub>+1</sub> - 2 или перепишем:</p>
+      <p><sub><img src="chapter5/image009.gif"></sub> </p>
+      <p>где D<sub>1</sub>=2<sub><img src="chapter5/image008.gif"></sub>f <sub>1</sub> 
+        – 3.</p>
+      <p>Для второй группы случаев аналогично из точек N  и M:</p>
+      <p><sub><img src="chapter5/image010.gif"></sub></p>
+      <p>где D<sub>1</sub>=2<sub><img src="chapter5/image008.gif"></sub>f <sub>1</sub> 
+        – 1.</p>
+      <p>Для различия случаев 2 и 3 введем булевую переменную </p>
+      <p><sub><img src="chapter5/image011.gif"></sub></p>
+      <p>Тогда,  для точек  L  и M - случай 2 выбираем если B=0, случай 3,если 
+        B=1 .</p>
+      <p>Для точек M и N случай 2 выбираем если B=0, случай 3 если B=1 .</p>
+      <p>Таким  образом, мы получили итеративный способ вычисления d <sub>j</sub><sub>+1</sub> 
+        по предыдущему значению d<sub>j</sub> и выбора между точками L,M,N. В 
+        алгоритме минимизировано количество  вычислений вещественных значений. 
+        Используется  три сложения и   одно умножение.</p>
+</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+</body>
+</html>

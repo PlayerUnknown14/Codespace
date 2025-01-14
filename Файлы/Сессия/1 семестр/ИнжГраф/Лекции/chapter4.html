@@ -1,0 +1,970 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1251">
+<title>Алгоритм Брезенхема для генерации окружности</title>
+<link rel="stylesheet" href="main.css" type="text/css">
+</head>
+<body  bgcolor="#FFFFFF">
+<div class=heading1> 
+  <table width="550" border="0" cellspacing="0" cellpadding="0" align="center">
+    <tr>
+      <td class="heading1">Алгоритм <span >Брезенхема</span> для генерации окружности</td>
+    </tr>
+    <tr>
+      <td>
+        <p class=MsoTitle>В растр нужно раскладывать не только <span >линейные</span> 
+          но и другие, более сложные функции: эллипсы, гиперболы, сплайны, окружности, 
+          произвольные кривые (<span
+>Ву</span> и <span >Рокне</span>). Наибольшее внимание уделено окружности.</p>
+        <p>Один из наиболее эффективных и простых для понимания алгоритмов генерации 
+          окружности принадлежит <span
+>Брезенхему</span>. Для начала заметим, что имеет смысл сгенерировать 1/8 часть 
+          окружности. Остальные ее части могут быть получены последовательными 
+          преобразованиями (отражениями) (Рис. 34).</p>
+        <p align="center"><img src="chapter4/figure1.gif" width="454" height="336"></p>
+        <p align="center">Рис. 34</p>
+        <p>Если сгенерирован один октант от 0<sup>0</sup> до 45<sup>0</sup> против 
+          часовой стрелки, то второй октант можно получить <span >зеркальными</span> 
+          отражением относительно прямой y=x , что дает в совокупности один квадрант.</p>
+        <p>Первый квадрант отражается относительно прямой x=0 для получения соответствующей 
+          части окружности во втором квадранте.</p>
+        <p>Верхняя полуокружность отражается относительно <span
+>прямой</span> y=0 для завершения построения. Для вывода алгоритма рассмотрим 
+          первую четверть окружности с центром в начале координат.</p>
+        <p>Заметим, что если работа алгоритма начинается в точке <span lang=EN-US style='
+mso-ansi-language:EN-US'>x</span><span style='mso-bidi-font-size:
+10.0pt'>=0 и </span>y=R, то при генерации окружности по часовой стрелке в первом 
+          квадранте y является монотонно убывающей функцией аргумента x (Рис.35).</p>
+        <p align="center"><img src="chapter4/figure35.gif" width="161" height="158"></p>
+        <p align="center">Рис. 35</p>
+        <p >Аналогично, если исходной точкой является y=0 и x=R , то при генерации 
+          окружности против часовой стрелки x будет монотонно убывающей функцией 
+          аргумента y (Рис. 36).</p>
+        <p align="center" ><img src="chapter4/figure36.gif" width="181" height="148"></p>
+        <p align="center" >Рис. 36</p>
+        <p >В нашем случае выбирается генерация по часовой стрелке сначала в точке 
+          x=0 и y=R.</p>
+        <p>Предполагается, что центр окружности и начальная точка находятся тоже 
+          в точке растра. Для любой заданной точки на окружности при генерации 
+          по часовой стрелке существует только три возможности выбрать следующий 
+          <span >пиксел</span>, наилучшим образом приближающей окружность (Рис. 
+          37): </p>
+        <ul>
+          <li>горизонтально вправо</li>
+          <li>по диагонали вниз и вправо </li>
+          <li>вертикально вниз</li>
+        </ul>
+        <p align="center"><img src="chapter4/figure37.gif" width="310" height="170"></p>
+        <p align="center">Рис. 37</p>
+        <p>Эти направления обозначены соответственно <span >m<sub>H</sub></span> 
+          , <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>m<sub>D</sub></span></span> , m<sub>V</sub>. Алгоритм 
+          выбирает <span
+>пиксел</span>, для которого минимален квадрат расстояния между одним из этих 
+          <span
+>пикселов</span> и окружностью.</p>
+        <p >То есть, min <span >из</span></p>
+        <p ><span >m<sub>H</sub></span> = <span lang=EN-US style='mso-bidi-font-size:
+10.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>( 
+          x <span ><sub>i</sub></span><sub> </sub>+ 1 )<sup>2</sup>+( y <span ><sub>i</sub></span>)<sup>2</sup>- 
+          R<sup>2</sup><span
+lang=EN-US style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>;<br>
+          <span >m<sub>D</sub></span> = <span lang=EN-US
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>( 
+          x <span ><sub>i</sub></span><sub> </sub>+ 1 )<sup>2</sup>+( y <sub>i</sub>-1)<sup>2</sup>- 
+          R<sup>2</sup><span lang=EN-US
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>;<br>
+          m<sub>V</sub> = <span lang=EN-US style='mso-bidi-font-size:
+10.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>( 
+          x <span ><sub>i</sub></span><sub> </sub>)<sup>2</sup>+( y <sub>i</sub>-1)<sup>2</sup>- 
+          R<sup>2</sup><span lang=EN-US style='mso-bidi-font-size:
+10.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>.</p>
+        <p >Вычисление можно упростить, если заметить<span
+> ,</span> что в окрестностях точки растра. ( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>, y<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub> 
+          возможны только 5 типов пересечения окружности и сетки растра (Рис.38).</p>
+        <p align="center" ><img src="chapter4/figure2.gif" width="200" height="200"></p>
+        <p align="center" >Рис. 38</p>
+        <p>Разность между квадратами расстояний от центра окружности до диагонального 
+          <span >пиксела</span> (x<sub>i</sub><sub><span style='mso-bidi-font-size:
+10.0pt'>+1 </span></sub>, y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub>-1</sub>) и от центра до точки на окружности <sup></sup>равна:</p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1025"> </sub> <span ><sub>i</sub></span> 
+          = (x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span>+1)<sup>2</sup>+(y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span>-1)<sup>2</sup>- R<sup>2</sup></p>
+        <p class=MsoBodyTextIndent2>Как и в алгоритме <span >Брезенхема</span> 
+          для отрезка, для выбора соответствующего <span >пиксела</span> желательно 
+          использовать только знак ошибки, а не ее величину.</p>
+        <p>Сначала рассмотрим горизонтальный шаг <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>m<sub>H</sub></span></span> к <span >пикселу</span> <span
+>( </span>x<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><span style='mso-bidi-font-size:
+10.0pt'>+1, </span>y <span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>). Обозначим это первое 
+          положение <span >пиксела</span> как (<span >i</span>+1), тогда координаты 
+          нового <span >пиксела</span> и значение <sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1026"> </sub> <span ><sub>i</sub></span> 
+          равны </p>
+        <p ><span >x<sub>i+</sub></span><sub>1 </sub>= x <span ><sub>i</sub></span><sub> 
+          </sub>+1</p>
+        <p ><span >y<sub>i+</sub></span><sub>1 </sub>= y <span ><sub>i</sub></span><sub> 
+          </sub></p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1027"> </sub> <sub>i+1</sub>= <span >( 
+          x</span> <sub>i+1</sub>+1)<sup>2</sup>+( y<sub>i+1</sub>-1)<sup>2</sup>- 
+          R<sup>2</sup> = ( x <span ><sub>i</sub></span><sub> </sub>+1)<sup>2</sup>+2x 
+          <sub>i+1</sub>+ 1+(y <sub>i</sub>-1)<sup>2 </sup>- R<sup>2</sup>= ( 
+          x <sub>i</sub>+1)<sup>2 </sup>+(y <sub>i</sub>-1)<sup>2 </sup>- R<sup>2</sup>+2x 
+          <sub>i+1</sub>+ 1=</p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1028"> </sub> <span ><sub>i</sub></span>+2x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub>+1</sub>+ 1</p>
+        <p >Аналогично, координаты нового <span >пиксела</span> и значение <sub> 
+          <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1029"> </sub> <span ><sub>i</sub></span> 
+          для шага<sub> </sub><span >m<sub>D</sub></span><span style='mso-bidi-font-size:
+10.0pt'> к <span >пикселу</span> (</span>x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span>+1,y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>-1) таковы:</p>
+        <p ><span >x</span> <sub>i+1 </sub>= x <span ><sub>i</sub></span><sub> 
+          </sub>+1</p>
+        <p ><span >y</span> <sub>i+1 </sub>= y <span ><sub>i</sub></span><sub> 
+          </sub>-1</p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1030"> </sub> <sub>i+1</sub>=<sub> 
+          <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1031"> </sub> <sub>i</sub>+2x <sub>i+1</sub>-2y 
+          <sub>i+1</sub>+ 2</p>
+        <p >То же самое для шага m<sub>V</sub><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>к (x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span> , y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>-1)</p>
+        <p ><span >x</span> <sub>i+1 </sub>= x <span ><sub>i</sub></span><sub> 
+          </sub></p>
+        <p ><span >y</span> <sub>i+1 </sub>= y <span ><sub>i</sub></span><sub> 
+          </sub>-1</p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1032"> </sub> <sub>i+1</sub>=<sub> 
+          <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1033"> </sub> <sub>i</sub>-2y <sub>i+1</sub>+ 
+          1</p>
+        <p >При <span lang=EN-US style='
+mso-ansi-language:EN-US'><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1034"> </sub> <span ><sub>i</sub></span></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>&lt; 0 <span >диагональная</span> 
+          т.<sub> </sub>(x <span ><sub>i</sub></span> , y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>-1) находится внутри реальной 
+          окружности, т.е. это случаи 1 и 2. Ясно, что в этой ситуации следует 
+          выбрать либо <span >пиксел</span> (x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span> , y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><span ><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>)</span> т.е. <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>m<sub>D</sub></span></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>.</p>
+        <p >Рассмотрим сначала случай 1 и проверим разность квадратов расстояний 
+          от окружности до <span >пикселов</span> в горизонтальном и диагональном 
+          направлениях.</p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span>=<span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span><span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>( x</span></span> <sub>i</sub>+1)<sup>2</sup>+( <span >y<sub>i</sub></span>)<sup>2</sup>- 
+          R<sup>2</sup><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>-<span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>( x <sub>i</sub>+1)<sup>2</sup>+ 
+          ( <span >y<sub>i</sub></span><sub> </sub>- 1)<sup>2</sup>- R<sup>2</sup><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span></p>
+        <p >При <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span>&lt;0 расстояние от окружности 
+          до диагонального <span >пиксела</span> (<span >m<sub>D</sub></span>) 
+          больше<span > ,</span> чем до горизонтального (<span >m<sub>H</sub></span>). 
+          Напротив<span
+> ,</span> если <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span> &gt;0 , расстояние до горизонтального 
+          <span
+>пиксела</span> (<span >m<sub>H</sub></span>) больше.</p>
+        <p >Таким <span >образом</span> при </p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span> <span lang=EN-US
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&pound;</span></span>0 
+          выбираем <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>m<sub>H</sub></span></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>в ( <span
+><sub>i</sub></span>+1,y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><span ><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>)</span></p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span> &gt;0 
+          выбираем <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>m<sub>D</sub></span></span> в ( <span
+><sub>i</sub></span>+1,y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>-1)</p>
+        <p >При <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span> 
+          =0 , когда расстояния до обоих <span >пикселов</span> <span >одинаковы 
+          от окружности выбираем</span> горизонтальный шаг.</p>
+        <p >Количество вычислений необходимых для оценки величины <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span> можно 
+          сократить<span
+> ,</span> если заметить , что в случае 1</p>
+        <p ><span >( x</span> <sub>i</sub>+1)<sup>2</sup>+( <span >y<sub>i</sub></span>)<sup>2</sup>- 
+          R<sup>2 </sup><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&sup3;</span></span> 0 </p>
+        <p ><span >( x</span> <sub>i</sub>+1)<sup>2</sup>+ ( <span >y<sub>i</sub></span><sub> 
+          </sub>- 1)<sup>2</sup>- R<sup>2</sup> <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&lt;</span></span> 
+          0</p>
+        <p >Т.к. горизонтальный <span >пиксел</span> (x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span>+1,y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>-1) всегда лежит внутри окружности 
+          , а горизонтальный (x<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><span style='mso-bidi-font-size:
+10.0pt'>+1,</span>y <span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>) <span >вне</span> 
+          <span >ее</span>. Таким <span >образом</span> <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span> можно вычислить по формуле 
+        </p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span>=( x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span>+1)<sup>2</sup>+(<span >y<sub>i</sub></span><span style='mso-bidi-font-size:
+10.0pt'>)<sup>2</sup>- </span>R<sup>2 </sup>+(x<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><span style='mso-bidi-font-size:
+10.0pt'>+1)<sup>2</sup>+ <span >( </span></span><span >y<sub>i</sub></span><sub> 
+          </sub>- 1)<sup>2</sup>- R<sup>2</sup></p>
+        <p > Дополним до полного квадрата член (<span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>y<sub>i</sub></span></span>)<sup>2</sup> с помощью добавления 
+          и вычитания -2y <span ><sub>i</sub></span><sub>+1</sub>+ 1<span lang=EN-US
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&THORN;</span></span></p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span>=2[<span >( 
+          </span>x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>+1)<sup>2</sup>+( <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>y<sub>i</sub></span></span>-1)<sup>2</sup>- R<sup>2</sup>] 
+          +2<span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>y<sub>i</sub></span></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>- 1</p>
+        <p >в квадратных скобках по определению стоит <sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1035"> </sub> <span ><span ><sub>i</sub></span></span> 
+          и его подстановка существенно упрощает выражение </p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span>=(<sub> 
+          <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1036"> </sub> <span ><sub>i</sub></span> 
+          + <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>y<sub>i</sub></span></span><span ><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>)</span> -1</p>
+        <p >Рассмотрим случай 2.</p>
+        <p > *Случай 2</p>
+        <p >Из рисунка видно<span > ,</span> что необходимо выбрать горизонтальный 
+          <span >пиксел</span> (x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>+1,y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>) т.к. y является монотонно убывающей 
+          функцией. Проверка компонент <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span> показывает<span > ,</span> 
+          что  </p>
+        <p >( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>+1) + <span >( </span><span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>y<sub>i</sub></span></span>)<sup>2</sup>- R<sup>2 </sup><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&lt;</span></span> 0 </p>
+        <p >( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>+1) + <span >( </span><span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>y<sub>i</sub></span></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2</sup> 
+          <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&lt;</span></span> 0</p>
+        <p >Поскольку в случае 2 горизонтальный <span >( </span>x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span>+1,y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>) и диагональный (x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>+1,y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>-1) лежат внутри окружности.</p>
+        <p >Следовательно <span style='font-family:
+Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span><sup> </sup><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&lt;</span></span> 0 и при использовании 
+          того же самого критерия<span > ,</span> что и в случае 1 , выбирается 
+          <span
+>пиксел</span> ( x<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><span style='mso-bidi-font-size:
+10.0pt'>+1,</span>y <span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>) .</p>
+        <p >Если<sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1037"> </sub> <span ><sub>i</sub></span> 
+          &gt;0 , то диагональная точка ( <span lang=EN-US style='
+mso-ansi-language:EN-US'>x</span> <span ><sub>i</sub></span>+1,y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span> -1<sub> </sub>) находятся вне окружности<span
+> ,</span> т.е. это случаи 3 и 4. В данной ситуации ясно<span
+> ,</span>что должен быть выбран либо <span >пиксел</span> ( <span lang=EN-US style='
+mso-ansi-language:EN-US'>x</span> <span ><sub>i</sub></span>+1,y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span> -1<sub> </sub>) точнее <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>m<sub>D</sub></span></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>либо<sub> </sub>( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span> , y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span> -1<sub> </sub>) точнее m<sub>V</sub><span style='mso-bidi-font-size:
+10.0pt'>.</span></p>
+        <p >Аналогично разбору предыдущего случая критерий выбора можно получить<span > 
+          ,</span> рассматривая сначала случай 3 и проверяя разность между квадратами 
+          расстояний от окружности до диагонального <span >m<sub>D</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>и вертикального m<sub>V</sub><span style='mso-bidi-font-size:
+10.0pt'> <span >пикселов</span> точнее.</span></p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span>=<span lang=EN-US
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>( 
+          x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>+ 1<span > )</span><sup>2</sup>+( 
+          <span lang=EN-US style='
+mso-ansi-language:EN-US'>y</span> <span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2</sup><span
+lang=EN-US style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span> 
+          -<span lang=EN-US
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span>( 
+          x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>)<sup>2</sup>+( y<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2</sup><span
+lang=EN-US style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&frac12;</span></span><br>
+          При <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&lt;</span></span> 0 расстояние от окружности 
+          до вертикального <span
+>пиксела</span> ( x<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>, 
+          y<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>- 
+          1) больше и следует выбрать диагональный шаг <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>m<sub>D</sub></span></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>, к <span >пикселу</span> ( <span lang=EN-US style='
+mso-ansi-language:EN-US'>x</span> <span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>+ 1, y<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1) .Напротив в случае 
+          <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span><span style='font-size:
+12.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&cent;</span></span>&gt;0 
+          расстояние от окружности до диагонального <span >пиксела</span> больше 
+          и следует выбрать вертикальное движение к <span >пикселу</span> <span
+>( </span>x<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>, 
+          y<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>- 
+          1) таким образом</p>
+        <p >           при <span style='font-size:
+12.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&pound;</span></span> 0 выбираем <span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>m<sub>D</sub></span></span> в <span >( </span>x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>+ 1<sub> </sub>, y<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)</p>
+        <p >           при <span style='font-size:
+12.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span>&gt; 0 выбираем m<sub>V</sub><span style='mso-bidi-font-size:
+10.0pt'> в <span >( </span></span> <span
+><sub>i</sub></span><sub> </sub>, y<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>- 
+          1).</p>
+        <p >здесь в случае <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span>= 0 т.е. когда расстояния 
+          равны<span > ,</span> выбран диагональный шаг.</p>
+        <p >Проверка компонент <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span><span style='font-size:
+12.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&cent;</span></span> 
+          показывает<span
+> ,</span> что </p>
+        <p >( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>+1)<sup> 2</sup> + <span
+>( </span><span >y<sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2 
+          </sup><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&sup3;</span></span> 0 </p>
+        <p >( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>)<sup> 2</sup> + <span >( </span><span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>y<sub>i</sub></span></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2</sup> 
+          <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&lt;</span></span> 0</p>
+        <p >Поскольку для случая 3 диагональный <span >пиксел</span> ( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>+ 1, y<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1) находится вне 
+          окружности<span > ,</span> тогда как вертикальный лежит внутри ее. Это 
+          позволяет записать <span style='mso-bidi-font-size:
+10.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span> в виде</p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span>=( x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>+ 1<span > )</span><sup>2</sup>+( 
+          <span lang=EN-US style='
+mso-ansi-language:EN-US'>y</span> <span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2</sup> 
+          +( x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>)<sup>2</sup>+( y<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2</sup></p>
+        <p >Дополнение до полного квадрата члена<span >( </span>x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>)<sup>2 </sup>с помощью добавления 
+          и вычитания 2 x<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>+ 
+          1 дает </p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span>=2[<span >( </span>x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>+ 1 )<sup>2</sup>+( 
+          y<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2</sup> 
+          ] - 2x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>- 1 </p>
+        <p >Использование определения <sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1038"> </sub> <span ><sub>i</sub></span><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span>приводит к выражению вида:</p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span>=2(<sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1039"> </sub> <span ><sub>i</sub></span> 
+          - x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><span ><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>)</span> -1</p>
+        <p >Теперь рассматривая 4 случай<span > ,</span> заметим что следует выбрать 
+          вертикальный <span >пиксел</span>  </p>
+        <p >( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>, y<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>- 1<span > )</span> т. к. y является 
+          монотонно убывающей функцией при <span style='mso-bidi-font-size:
+10.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>­</span></span>x.</p>
+        <p >Проверка компонента <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span> для случая 4 показывает<span
+> ,</span> что :</p>
+        <p ><span >( x</span> <sub>i</sub>+1)<sup> 2</sup> + ( <span >y<sub>i</sub></span><sub> 
+          </sub>- 1)<sup>2</sup>- R<sup>2 </sup><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&gt;</span></span>0 </p>
+        <p ><span >( x</span> <span ><sub>i</sub></span>)<sup> 2</sup> + ( <span >y<sub>i</sub></span><sub> 
+          </sub>- 1)<sup>2</sup>- R<sup>2</sup> <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&gt;</span></span>0</p>
+        <p >Поскольку оба <span >пиксела</span> находится вне окружности<span
+> ,</span> следовательно <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&gt;</span></span>0 и при использовании 
+          критерия полученного для случая 3 , происходит верный выбор m<sub>V</sub><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>.</p>
+        <p >Осталось проверить только случай 5. Который встречается<span > ,</span> 
+          когда диагональный <span >пиксел</span></p>
+        <p >( <span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>+ 1, y<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1) лежит на окружности<span
+> ,</span> т.е. <sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1040"> </sub> <span ><sub>i</sub></span> 
+          =0.</p>
+        <p >Проверка компонента  <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span> 
+          показывает<span
+> :</span></p>
+        <p >( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>+1)<sup> 2</sup> + <span
+>( </span><span >y<sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>)<sup>2</sup>- R<sup>2 
+          </sup><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&gt;</span></span>0 
+        </p>
+        <p >( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>+1)<sup> 2</sup> + <span >( </span><span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>y<sub>i</sub></span></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2</sup> 
+          =0         <span lang=EN-US
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&THORN;</span></span><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span><span style='font-size:
+12.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&gt;</span></span>0 
+          и выбирается диагональный <span >пиксел</span> (x <span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>+ 1, y<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1).</p>
+        <p >Аналогичным образом оцениваем компоненты <span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&cent;</span></span><span > .</span></p>
+        <p >( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>+1)<sup> 2</sup> + <span
+>( </span><span >y<sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2 
+          </sup>=0 </p>
+        <p >( x<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span>)<sup> 2</sup> + <span >( </span><span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>y<sub>i</sub></span></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>- 1)<sup>2</sup>- R<sup>2</sup> 
+          <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&lt;</span></span>0 и <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span><span style='font-size:
+12.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&cent;</span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&lt;</span></span> 0 , что является условием 
+          выбора правильного диагонального шага к ( x<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>+ 
+          1, y<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>- 
+          1). Т.о. </p>
+        <p >Случай <sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1041"> </sub> <span ><sub>i</sub></span> 
+          =0 подчиняется тому же критерию<span > ,</span>что и случай <sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1042"> </sub> <span ><sub>i</sub></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&lt;</span></span> 0 или<sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1043"> </sub> <span ><sub>i</sub></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&gt;</span></span> 0</p>
+        <p >Подведем итог полученных результатов </p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" > </sub> <span ><span ><sub>i</sub></span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&lt;</span></span> 0</p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span> 
+          <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&pound;</span></span>0 выбираем <span
+>пиксел</span> <span >( </span>x<span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><sub>i</sub></span><sub><span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span></sub>+ 1, y<span lang=EN-US style='mso-bidi-font-size:
+10.0pt'> </span><span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>) <span lang=EN-US
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>®</span></span><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span><span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>m<sub>H</sub></span></span></p>
+        <p ><span style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>d</span></span> 
+          <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&gt;</span></span>0<span
+lang=EN-US style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>®</span></span> <span >( 
+          x</span> <span ><sub>i</sub></span><sub> </sub>+ 1, y <span ><sub>i</sub></span><sub> 
+          </sub>- 1<sub> </sub>) <span lang=EN-US style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>®</span></span> 
+          <span >m<sub>D</sub></span></p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1045"> </sub> <span ><span ><sub>i</sub></span></span><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&gt;</span></span> 0</p>
+        <p ><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span><span style='font-size:
+12.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&cent;</span></span> 
+          <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&pound;</span></span><span >0 </span>( x 
+          <span ><sub>i</sub></span><sub> </sub>+ 1, y <span
+><sub>i</sub></span>- 1<sub> </sub>) <span lang=EN-US
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>®</span></span> <span >m<sub>D</sub></span></p>
+        <p ><span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>d</span></span><span style='font-size:
+12.0pt;font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;
+mso-hansi-font-family:&quot;Times New Roman&quot;;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>&cent;</span></span> 
+          <span
+style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-char-type:symbol;mso-symbol-font-family:Symbol'><span style='mso-char-type:
+symbol;mso-symbol-font-family:Symbol'>&gt;</span></span>0<span
+lang=EN-US style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>®</span></span> <span >( 
+          x</span> <span ><sub>i</sub></span><sub> </sub>, y <span ><sub>i</sub></span><sub> 
+          </sub>- 1<sub> </sub>) <span
+lang=EN-US style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>®</span></span> m<sub>V</sub></p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1046"> </sub> <span ><sub>i</sub></span>= 
+          0<span
+lang=EN-US style='font-family:Symbol;
+mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:&quot;Times New Roman&quot;;
+mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:Symbol'><span
+style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>®</span></span><span
+><span lang=EN-US style='
+mso-ansi-language:EN-US'>( x</span></span> <span ><sub>i</sub></span><sub> </sub>+ 
+          1, y <span ><sub>i</sub></span><sub> </sub>- 1<sub> </sub>) <span lang=EN-US style='
+font-family:Symbol;mso-ascii-font-family:&quot;Times New Roman&quot;;mso-hansi-font-family:
+&quot;Times New Roman&quot;;mso-ansi-language:EN-US;mso-char-type:symbol;mso-symbol-font-family:
+Symbol'><span style='mso-char-type:symbol;mso-symbol-font-family:Symbol'>®</span></span> 
+          <span >m<sub>D</sub></span></p>
+        <p >Легко разработать простые <span >реккурентные</span> соотношения для 
+          реализации пошагового алгоритма.</p>
+        <p >Сначала рассмотрим горизонтальный шаг <span >m<sub>H</sub></span> 
+          к <span >пикселу</span> <span >( </span>x<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>+ 
+          1, y<span lang=EN-US
+style='mso-bidi-font-size:10.0pt'> </span><span ><sub>i</sub></span><sub> </sub>. 
+          Обозначим это новое положение <span >пиксела</span> как (<span >i</span>+1). 
+          Тогда координаты нового <span >пиксела</span> и значение <sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1047"> </sub> <span ><sub>i</sub></span><sub><span
+lang=EN-US style='mso-bidi-font-size:10.0pt'> </span></sub>равны;</p>
+        <p ><span >x</span> <sub>i+1 </sub>= x <span
+><sub>i</sub></span> + 1;</p>
+        <p ><span >y</span> <sub>i+1 </sub>= y <span
+><sub>i</sub></span>;</p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1048"> </sub> <sub>i+1</sub>= (x 
+          <sub>i+1</sub>+1)<sup>2</sup> + (y <sub>i+1 </sub>-1)<sup>2</sup> - 
+          <span >R<sup>2 </sup></span>= (x <sub>i+1</sub>)<sup>2</sup> + (y <sub>i+1 
+          </sub>-1)<sup>2</sup> - R<sup>2 </sup>+2 x <sub>i+1</sub>+1=<sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1049"> </sub> <sub>i</sub>+2 x 
+          <sub>i+1</sub>+1;<sub></sub></p>
+        <p class=MsoCaption>Аналогично, координаты нового <span >пиксела</span> 
+          и значение <sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1050"> </sub> <span ><sub>i</sub></span><sub> 
+          </sub>для шага <span ><span lang=EN-US style='mso-ansi-language:
+EN-US;font-weight:normal'>m<sub>D</sub></span></span><sub> </sub>к <span
+>пикселу</span> <span
+>( </span><span lang=EN-US style='mso-ansi-language:EN-US;
+font-weight:normal'>x</span> <span
+><sub><span lang=EN-US style='mso-ansi-language:EN-US;font-weight:
+normal'>i</span></sub></span><sub> </sub>+ 1, <span lang=EN-US style='mso-ansi-language:
+EN-US;font-weight:normal'>y</span> <span
+><sub><span lang=EN-US style='mso-ansi-language:EN-US;font-weight:
+normal'>i</span></sub></span>-1<sub> </sub>)</p>
+        <p ><span >x</span> <sub>i+1 </sub>= x <sub>i</sub>+1<sub> </sub>;</p>
+        <p ><span >y</span> <sub>i+1 </sub>= y <span
+><sub>i</sub></span><sub> </sub>-1;</p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1051"> </sub> <sub>i+1</sub>= <sub> 
+          <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1052"> </sub> <sub>i</sub>+2 x 
+          <sub>i+1</sub>-2y <sub>i+1</sub>+2;<sub> </sub></p>
+        <p class=MsoCaption>То же самое для шага m<sub>V</sub><sub> </sub>к <span >( 
+          </span>x <span ><sub>i</sub></span><sub> ,</sub> y <span ><sub>i</sub></span>-1<sub> 
+          </sub>)</p>
+        <p ><span >x</span> <sub>i+1 </sub>= x <span
+><sub>i</sub></span><sub> </sub>;</p>
+        <p ><span >y</span> <sub>i+1 </sub>= y <span
+><sub>i</sub></span><sub> </sub>-1;</p>
+        <p ><sub> <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1053"> </sub> <sub>i+1</sub>= <sub> 
+          <img 
+src="chapter4/image002.gif" v:shapes="_x0000_i1054"> </sub> <sub>i</sub>-2y <sub>i+1</sub>+2;<sub> 
+          </sub></p>
+        <p ></p>
+      </td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  <p class=MsoTitle>&nbsp;</p>
+</div>
+</body>
+</html>
