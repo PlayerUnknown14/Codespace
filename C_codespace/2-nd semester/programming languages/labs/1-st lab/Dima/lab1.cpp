@@ -27,12 +27,13 @@ void printMatrix(const std::vector<std::vector<Type>>& matrix) {
 }
  
 template <typename Type>
-int compareMatrices(const std::vector<std::vector<Type>>& matrix1, const std::vector<std::vector<Type>>& matrix2) {
+int compareMatrices(const std::vector<std::vector<Type>>& matrix1, const std::vector<std::vector<Type>>& matrix2, int& colDiff) {
     for (int i = 0; i < matrix1.size(); ++i) {
         for (int j = 0; j < matrix1[i].size(); ++j) {
             if (matrix1[i][j] != matrix2[i][j]) {
+                colDiff = j + 1;
                 return i + 1;
-                int& ref = j
+
             }
         }
     }
@@ -59,22 +60,13 @@ int main() {
  
     std::cout << "Вторая матрица:\n";
     printMatrix(matrix2);
- 
-    for (int i = 0; i<2; i++){
-        int result = compareMatrices(matrix1, matrix2);
-        
-        if (result == -1) {
-            std::cout << "Матрицы равны.\n";
-        }
-        else {
-            if (i == 0) {
-            std::cout << "Матрицы отличаются. Первая несовпадающая строка: " << result << "\n";
-            }
-            else {
-                std::cout <<"Столбец: " << result << "\n";
-        }
+    int colDiff;
+    int result = compareMatrices(matrix1, matrix2, colDiff);
+    if (result == -1) {
+        std::cout << "Матрицы равны.\n";
     }
-
-}
+    else {
+        std::cout << "Матрицы отличаются. Первая несовпадающая строка: " << result << "\n" << "Столбец с несовпадением: " << colDiff << "\n";
+    }
     return 0;
 }
