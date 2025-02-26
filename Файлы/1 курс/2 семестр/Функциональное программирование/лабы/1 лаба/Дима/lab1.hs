@@ -7,7 +7,7 @@ isParal (Point x1 y1) (Point x2 y2) (Point x3 y3) (Point x4 y4) =
 main :: IO ()
 main = do
     let a = Point 1 1
-        b = Point 2 1
+        b = Point 2 1   
         c = Point 3 3
         d = Point 2 3
     if isParal a b c d
