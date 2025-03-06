@@ -24,9 +24,9 @@ main::IO()
 main = do
     putStrLn "Список натуральных чисел."
     print(nat 10)
-    putStrLn "Список нечетных натуральных чисел"
+    putStrLn "Список нечётных натуральных чисел"
     print(odd_nat 10)
-    putStrLn "Список четных натуральных чисел"
+    putStrLn "Список чётных натуральных чисел"
     print(even_nat 10)
     putStrLn "Список кубов натуральных чисел."
     print(cube_nat 10)
