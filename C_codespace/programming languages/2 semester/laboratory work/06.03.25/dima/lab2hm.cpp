@@ -24,7 +24,12 @@ int countNum(char*filename, int a, int b){
 int main(){
     int a = 10; 
     int b = 30;
-    int result = countNum("C://Users//luvidmi//Desktop//git//Codespace//C_codespace//programming languages//2 semester//laboratory work//06.03.25//dima//numbers.txt",a,b);
+    int result = countNum("C://Users//luvidmi//Desktop//git//Codespace//C_codespace//programming languages//2 semester//laboratory work//06.03.25//dima//numbers.txt1",a,b);
+    if (result == -1){
+        cout<<"Нет потоков";
+    }
+    else{
     cout<<"Количество чисел, больших "<<a<<", но меньших "<<b<<" = "<<result;
+    }
     return 0;
 }
