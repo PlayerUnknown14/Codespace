@@ -24,7 +24,7 @@ int countNum(char*filename, int a, int b){
 int main(){
     int a = 10; 
     int b = 30;
-    int result = countNum("C://Users//luvidmi//Desktop//git//Codespace//C_codespace//programming languages//2 semester//laboratory work//06.03.25//dima//numbers.txt1",a,b);
+    int result = countNum("numbers.txt",a,b);
     if (result == -1){
         cout<<"Нет потоков";
     }
