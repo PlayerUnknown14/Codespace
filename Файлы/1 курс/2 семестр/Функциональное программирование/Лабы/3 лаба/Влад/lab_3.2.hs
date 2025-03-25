@@ -1,6 +1,18 @@
+{-
+
+ИСХОДНАЯ ФУНКЦИЯ
+
 subList :: [a] -> Int -> Int -> [a]
 subList list n m
     | n > m = []
+    | n < 0 || m >= length list = []
+    | otherwise = take (m - n + 1) (drop n list)
+-}
+
+subList :: [a] -> Int -> Int -> [a]
+subList list n m
+    | n > m = []
+    | n < 0 || m >= length list = []
     | otherwise =
         let 
             indexedList = zip [0..] list
