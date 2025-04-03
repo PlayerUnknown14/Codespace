@@ -15,24 +15,28 @@ struct Node {
 
 Node* first(void);
 Node* add(Node* pend);
-void printForward(Node* pbegin);
-void printBackward(Node* pend);
+void printForward(Node* pbegin, int size);
+void printBackward(Node* pend, int size);
 
 int main(void) {
     Node *pbegin, *pend;
 
+    int studentNum;
+    cout << "\nВведите количество студентов: ";
+    cin >> studentNum;
+
     pend = pbegin = first();
 
-    int i;
-    for(i = 0; i < 1; i++) {
+
+    for(int i = 0; i < studentNum - 1; i++) {
         pend = add(pend);
     }
 
     cout << "\nСписок сверху вниз (от начала к концу):\n";
-    printForward(pbegin);
+    printForward(pbegin, studentNum);
     
     cout << "\nСписок снизу вверх (от конца к началу):\n";
-    printBackward(pend);
+    printBackward(pend, studentNum);
     
     return 0;
 }
@@ -40,11 +44,11 @@ int main(void) {
 Node* first(void) {
     Node* pv = new Node;
     cout << "Введите фамилию, имя и отчество студента: ";
-    cin >> pv->student.fullName;
+    getline(cin >> ws, pv->student.fullName);
     cout << "Введите номер группы (например, БИ13-01): ";
-    cin >> pv->student.groupNumber;
+    getline(cin, pv->student.groupNumber);
     cout << "Укажите место жительства (Parents/Dorms/Rent apparts): ";
-    cin >> pv->student.addressType;
+    getline(cin, pv->student.addressType);
     pv->next = nullptr; 
     pv->prev = nullptr; 
     return pv;
@@ -53,37 +57,41 @@ Node* first(void) {
 Node* add(Node* pend) {
     Node* pv = new Node;
     cout << "Введите фамилию, имя и отчество студента: ";
-    cin >> pv->student.fullName;
+    getline(cin >> ws, pv->student.fullName);
     cout << "Введите номер группы (например, БИ13-01): ";
-    cin >> pv->student.groupNumber;
+    getline(cin, pv->student.groupNumber);
     cout << "Укажите место жительства (Parents/Dorms/Rent apparts): ";
-    cin >> pv->student.addressType;
+    getline(cin, pv->student.addressType);
     pv->next = nullptr;  
     pv->prev = pend;     
     pend->next = pv;     
     return pv;           
 }
 
-void printForward(Node* pbegin) {
+void printForward(Node* pbegin, int size) {
     Node* pv = pbegin;
     while (pv) {
-        cout << "ФИО студента: " << pv->student.fullName << "; ";
-        cout << "Группа: " << pv->student.groupNumber << "; ";
-        cout << "Место проживания: " << pv->student.addressType << "; ";
-        cout << endl;
-        pv = pv->next;
+        for (int i = 0; i < size; ++i) {
+            cout << "Данные студента №" << i + 1 << ": ";
+            cout << "ФИО студента: " << pv->student.fullName << "; ";
+            cout << "Группа: " << pv->student.groupNumber << "; ";
+            cout << "Место проживания: " << pv->student.addressType << "; ";
+            cout << endl;
+            pv = pv->next;
+        }
     }
-    cout << endl;
 }
 
-void printBackward(Node* pend) {
+void printBackward(Node* pend, int size) {
     Node* pv = pend;
     while (pv) {
-        cout << "ФИО студента: " << pv->student.fullName << "; ";
-        cout << "Группа: " << pv->student.groupNumber << "; ";
-        cout << "Место проживания: " << pv->student.addressType << "; ";
-        cout << endl;
-        pv = pv->prev;
+        for (int i = size; i > 0; --i) {
+            cout << "Данные студента №" << i << ": ";
+            cout << "ФИО студента: " << pv->student.fullName << "; ";
+            cout << "Группа: " << pv->student.groupNumber << "; ";
+            cout << "Место проживания: " << pv->student.addressType << "; ";
+            cout << endl;
+            pv = pv->prev;
+        }
     }
-    cout << endl;
 }
