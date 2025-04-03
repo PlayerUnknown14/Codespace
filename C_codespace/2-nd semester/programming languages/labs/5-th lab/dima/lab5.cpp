@@ -1,74 +1,98 @@
 #include <iostream>
-#include <string>
-
 using namespace std;
 
-struct Passenger {
-    string fullName;
-    int trainNumber;
-    string destination;
+struct Info {
+    int d;
 };
 
-void inputPassenger(Passenger &pas) {
-    cout << "Введите ФИО пассажира: ";
-    getline(cin, pas.fullName);
-    cout << "Введите номер поезда: ";
-    cin >> pas.trainNumber;
-    cin.ignore();
-    
-    cout << "Введите станцию назначения: ";
-    getline(cin, pas.destination);
-}
+struct Node {
+    Info info;
+    Node* next;
+    Node* prev;
+};
 
-void outputPassenger(const Passenger &pas) {
-    cout << "ФИО: " << pas.fullName << ", Номер поезда: " << pas.trainNumber 
-        << ", Станция назначения: " << pas.destination << endl;
-}
+Node* start(void);
+Node* add(Node* pend);
+void printForw(Node* pbegin);
+void printBack(Node* pend);
 
-void inputPassengers(Passenger passengers[], int count) {
-    for (int i = 0; i < count; ++i) {
-        cout << "\nВведите данные для пассажира " << (i + 1) << ":\n";
-        inputPassenger(passengers[i]);
-    }
-}
-
-void outputPassengers(const Passenger passengers[], int count) {
-    for (int i = 0; i < count; ++i) {
-        cout << "\nПассажир " << (i + 1) << ":\n";
-        outputPassenger(passengers[i]);
-    }
-}
-
-int main() {
-    const int maxPassengers = 100;
-    Passenger passengers[maxPassengers];
-    int numberOfPassengers;
+int main(void) {
+    Node *pbegin, *pend;
     bool check = true;
-    while(check == true){
-        cout<<"1 - Задать структуру.\n2 - Вывести структуру\n0 - Закрыть программу\nВведите действие: ";
+    while (check == true){
+        cout<<"1 - Задать список\n2 - Добавить элемент в список\n3 - Вывести список\n0 - Закрыть программу\nВведите действие: ";
         int parameter;
         cin>>parameter;
         switch (parameter){
             case 1:
-                cout << "Введите количество пассажиров (максимум " << maxPassengers << "): ";
-                cin >> numberOfPassengers;
-
-                if (numberOfPassengers > maxPassengers || numberOfPassengers <= 0) {
-                    cout << "Некорректное количество пассажиров." << endl;
-                    return 1;
-                }
-
-                cin.ignore();
-
-                inputPassengers(passengers, numberOfPassengers);
+            pend = pbegin = start();
+            cout<<"Вы задали список\n";
                 break;
             case 2:
-                cout << "\nДанные о пассажирах:\n";
-                outputPassengers(passengers, numberOfPassengers);
+            cout <<"Введтие количество элементов, которое хотите занести в список: ";
+            int count;
+            cin>>count;
+            for(count; count != 0; count--) {
+                pend = add(pend);
+            }
                 break;
+            case 3:{
+                int par2;
+                cout<<"Как вы хотите вывести список?\n1 - От начального элемента до конечного\n2 - От конечного элемента до начального\nВведите параметр: ";
+                cin>>par2;
+            switch (par2){
+                case 1:
+                    cout << "\nСписок от начала к концу:\n";
+                    printForw(pbegin);
+                    break;
+                case 2:
+                    cout << "\nСписок от конца к началу:\n";
+                    printBack(pend);
+                    break;
+            }
+                break;}
             case 0:
                 check = false;
         }
     }
+
+    
     return 0;
+}
+
+Node* start(void) {
+    Node* pv = new Node;
+    cout << "Введите число: ";
+    cin >> pv->info.d;
+    pv->next = nullptr;
+    pv->prev = nullptr; 
+    return pv;
+}
+
+Node* add(Node* pend) {
+    Node* pv = new Node;
+    cout << "Введите число: ";
+    cin >> pv->info.d;
+    pv->next = nullptr;
+    pv->prev = pend;
+    pend->next = pv;
+    return pv;
+}
+
+void printForw(Node* pbegin) {
+    Node* pv = pbegin;
+    while (pv) {
+        cout << pv->info.d << " ";
+        pv = pv->next;
+    }
+    cout << endl;
+}
+
+void printBack(Node* pend) {
+    Node* pv = pend;
+    while (pv) {
+        cout << pv->info.d << " ";
+        pv = pv->prev;
+    }
+    cout << endl;
 }
