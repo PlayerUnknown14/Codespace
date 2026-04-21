@@ -7,7 +7,6 @@ def demonsrate_text_processing(analyzer):
 
     # Извлекаем минимум 4 абзаца
     paragraphs = [p.strip() for p in analyzer.processed_text.split('\n') if p.strip()]
-    
     if len(paragraphs) < 4:
         sample_text = "\n\n".join(paragraphs)
     else:
@@ -31,7 +30,9 @@ def demonsrate_text_processing(analyzer):
         l_cp, k_cc, k_oe = analyzer.get_efficiency()
 
         print(f"--- МЕТОД: {name} ---")
-        print(f"Метрики: Lcp={l_cp:.4f}, Kcc={k_cc:.4f}, Koe={k_oe:.4f}")
+        print(f"Средняя длина символа кодового алфавита (Lcp): {l_cp:.4f} бит/симв")
+        print(f"Коэффициент статического сжатия (Kcc): {k_cc:.4f}")
+        print(f"Коэффициент относительной эффективности (Koe): {k_oe:.4f}")
         print(f"Закодированная последовательность (первые 100 бит):\n{encoded[:100]}...")
         print(f"Результат декодирования:\n{decoded}")
         print(f"Проверка целостности: {'УСПЕШНО' if decoded == sample_text else 'ОШИБКА'}")
