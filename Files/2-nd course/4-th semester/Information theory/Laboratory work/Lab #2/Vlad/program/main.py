@@ -21,9 +21,7 @@ def print_results(metrics):
     print("\nЧастные потери H(X/yi):")
     len_yj = len(metrics['partial_X_yj'])
     for i, val in enumerate(metrics['partial_X_yj'][:len_yj]):
-        print(f"  H(X/y{i+1}): {val:.4f} бит/симв")      
-
-    print("="*40)
+        print(f"  H(X/y{i+1}): {val:.4f} бит/симв")
 
 def main():
     analyzer = TextEntropyAnalyzer()
@@ -41,7 +39,8 @@ def main():
             metrics = analyzer.calculate_entropy()
             print("\nСгенерирована случайная матрица совместных вероятностей 10x10.")
             print_results(metrics)
-            
+            analyzer.print_channel_matrices()
+        
         elif choice == "2":
             fname = input("Введите имя файла (по умолчанию 'input.txt'): ") or "input.txt"
             if not analyzer.build_from_text(fname):
@@ -50,7 +49,8 @@ def main():
             metrics = analyzer.calculate_entropy()
             print(f"\nТекст из файла '{fname}' обработан.")
             print_results(metrics)
-                
+            analyzer.print_channel_matrices()
+
         elif choice == "0":
             break
         else:
