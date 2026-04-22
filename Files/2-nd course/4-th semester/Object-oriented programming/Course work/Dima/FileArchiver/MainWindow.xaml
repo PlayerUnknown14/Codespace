@@ -1,0 +1,70 @@
+﻿<Window x:Class="FileArchiver.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        Title="Modern Archiver v1.0" Height="500" Width="800"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="280"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Выбор темы -->
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,15">
+            <TextBlock Text="Тема:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ComboBox x:Name="ThemeSelector" Width="120" SelectionChanged="ThemeSelector_SelectionChanged">
+                <ComboBoxItem Content="Светлая"/>
+                <ComboBoxItem Content="Темная"/>
+            </ComboBox>
+        </StackPanel>
+
+        <!-- Левая часть: Список файлов -->
+        <GroupBox Grid.Row="1" Grid.Column="0" Header="Выбранные файлы для обработки" Margin="0,0,15,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox x:Name="FilesList" Grid.Row="0" Margin="5"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                    <Button Content="Добавить файлы" Click="BtnAddFiles_Click" Width="140" Margin="0,0,10,0"/>
+                    <Button Content="Очистить" Click="BtnClearFiles_Click" Width="100"/>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <!-- Правая часть: Управление -->
+        <GroupBox Grid.Row="1" Grid.Column="1" Header="Параметры защиты">
+            <StackPanel Margin="10">
+                <TextBlock Text="Пароль (Argon2):" Margin="0,0,0,5"/>
+                <PasswordBox x:Name="PasswordInput" Margin="0,0,0,20"/>
+
+                <Button Content="Сжать в .7z.enc" Click="BtnCompress_Click" Height="40"
+                        HorizontalAlignment="Stretch" Margin="0,0,0,10" 
+                        Background="#0078D7" Foreground="White"/>
+                
+                <Button Content="Распаковать" Click="BtnExtract_Click" Height="40"
+                        HorizontalAlignment="Stretch" Margin="0,0,0,10"/>
+
+                <Button Content="Просмотр содержимого" Click="BtnView_Click" Height="40"
+                        HorizontalAlignment="Stretch" Margin="0,0,0,20"/>
+
+                <Separator Margin="0,0,0,10"/>
+                <TextBlock Text="Статус очереди:" FontWeight="Bold"/>
+                <TextBlock x:Name="QueueStatusText" Text="Свободна" Foreground="Green"/>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Футер -->
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="0,15,0,0" Background="Transparent">
+            <TextBlock x:Name="StatusText" Text="Готово к работе"/>
+        </StatusBar>
+    </Grid>
+</Window>
