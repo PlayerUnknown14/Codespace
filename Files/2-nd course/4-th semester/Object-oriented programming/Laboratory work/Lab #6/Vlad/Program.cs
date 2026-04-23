@@ -19,11 +19,11 @@ namespace GraphicsEditor
     public class MainForm : Form
     {
         // Компоненты интерфейса
-        private MenuStrip menuStrip;
-        private ToolStrip toolStrip;
-        private PictureBox pictureBox;
-        private StatusStrip statusStrip;
-        private ToolStripStatusLabel statusLabel;
+        private MenuStrip menuStrip; // главное меню
+        private ToolStrip toolStrip; // панель инструментов
+        private PictureBox pictureBox; // область рисования
+        private StatusStrip statusStrip; // строка состояния
+        private ToolStripStatusLabel statusLabel; // метка состояния (для строки)
 
         // Диалоги
         private ColorDialog colorDialog;
@@ -31,17 +31,20 @@ namespace GraphicsEditor
         private SaveFileDialog saveFileDialog;
 
         // Графика
-        private Bitmap bitmap;
-        private Graphics graphics;
-        private Point startPoint;
-        private bool isDrawing = false;
+        private Bitmap bitmap; // буфер изображения
+        private Graphics graphics; // контекст рисования
+        private Point startPoint; // начальная точка
+        private bool isDrawing = false; // флаг рисования
 
         // Настройки рисования
+        // Перо
         private Color penColor = Color.Black;
         private float penWidth = 2f;
         private DashStyle penStyle = DashStyle.Solid;
+        // Заливка
         private Color brushColor = Color.Black;
         private FillStyle brushStyle = FillStyle.Solid;
+        // Рисуемая фигура
         private string currentFigure = "Линия";
 
         // Перечисления
@@ -105,9 +108,9 @@ namespace GraphicsEditor
             pictureBox.Dock = DockStyle.Fill;
             pictureBox.BackColor = Color.White;
             pictureBox.Cursor = Cursors.Cross;
-            pictureBox.MouseDown += PictureBox_MouseDown;
-            pictureBox.MouseMove += PictureBox_MouseMove;
-            pictureBox.MouseUp += PictureBox_MouseUp;
+            pictureBox.MouseDown += PictureBox_MouseDown; // начало рисования
+            pictureBox.MouseMove += PictureBox_MouseMove; // трекинг курсора
+            pictureBox.MouseUp += PictureBox_MouseUp; // конец рисования
 
             // Статусная строка
             statusStrip = new StatusStrip();
@@ -150,7 +153,7 @@ namespace GraphicsEditor
             pictureBox.Image = bitmap;
         }
 
-        // События рисования
+        // Обработчики событий рисования
         private void PictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
