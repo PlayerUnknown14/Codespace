@@ -46,7 +46,7 @@ class TextEntropyAnalyzer:
         total_pairs = 0 # Счётчик биграмм в тексте
 
         # Считаем биграммы, заполняем матрицу
-        for i in range(len(text) - 1):
+        for i in range(0, len(text) - 1, 2):
             char_x = text[i]
             char_y = text[i+1]
             if char_x in char_to_idx and char_y in char_to_idx:
