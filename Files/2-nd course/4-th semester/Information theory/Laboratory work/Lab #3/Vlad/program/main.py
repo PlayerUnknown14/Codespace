@@ -57,7 +57,7 @@ def main():
             
         elif choice == "2":
             if not analyzer.processed_text:
-                print("Текст не загружен! Сначала выберите пункт 1.")
+                print("Текст не загружен!")
                 continue
             
             dp, ds, d = analyzer.analyze_redundancy(analyzer.processed_text)
