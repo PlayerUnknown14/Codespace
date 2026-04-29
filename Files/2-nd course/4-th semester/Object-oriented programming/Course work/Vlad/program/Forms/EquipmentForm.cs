@@ -3,9 +3,12 @@ using EquipmentAccounting.Models;
 
 namespace EquipmentAccounting.Forms;
 
+// Форма редактирования данных конкретного оборудования
 public class EquipmentForm : Form
 {
+    // Изменямое оборудование
     private readonly Equipment _equipment;
+    // Флаг режима (добавление/редактирование)
     private readonly bool _isEdit;
 
     private TextBox txtName, txtInventoryNumber, txtSerialNumber,
@@ -18,7 +21,8 @@ public class EquipmentForm : Form
         _isEdit = equipment != null;
         _equipment = equipment ?? new Equipment();
         BuildUI();
-        if (_isEdit) FillFields();
+        if (_isEdit)
+            FillFields();
     }
 
     private void BuildUI()
@@ -59,8 +63,11 @@ public class EquipmentForm : Form
         };
         cmbCategory.Items.AddRange(new[]
         {
-            "Вычислительная техника", "Периферийные устройства",
-            "Сетевое оборудование", "Вспомогательное оснащение", "Прочее"
+            "Вычислительная техника",
+            "Периферийные устройства",
+            "Сетевое оборудование",
+            "Вспомогательное оснащение",
+            "Прочее"
         });
         cmbCategory.SelectedIndex = 0;
 
@@ -70,7 +77,11 @@ public class EquipmentForm : Form
             Left = fieldX, Top = startY + 3 * rowH,
             Width = fieldW, DropDownStyle = ComboBoxStyle.DropDownList
         };
-        cmbStatus.Items.AddRange(new[] { "В эксплуатации", "На обслуживании", "Списано" });
+        cmbStatus.Items.AddRange(new[] {
+            "В эксплуатации",
+            "На обслуживании",
+            "Списано"
+        });
         cmbStatus.SelectedIndex = 0;
 
         var lblSerial = MakeLabel("Серийный номер:", 4);
@@ -125,6 +136,7 @@ public class EquipmentForm : Form
         });
     }
 
+    // Заполнение полей данных редактируемого оборудования
     private void FillFields()
     {
         txtName.Text = _equipment.Name;
@@ -143,11 +155,9 @@ public class EquipmentForm : Form
 
     private void BtnSave_Click(object? sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(txtName.Text) ||
-            string.IsNullOrWhiteSpace(txtInventoryNumber.Text))
+        if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtInventoryNumber.Text))
         {
-            MessageBox.Show("Заполните обязательные поля (*).", "Ошибка",
-                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show("Заполните обязательные поля (*).", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
@@ -172,7 +182,7 @@ public class EquipmentForm : Form
             db.Equipments.Add(_equipment);
         }
 
-        // Сначала сохраняем оборудование — получаем Id
+        // Сначала сохраняем оборудование в БД — получаем Id
         db.SaveChanges();
 
         // Теперь Id уже присвоен — записываем историю

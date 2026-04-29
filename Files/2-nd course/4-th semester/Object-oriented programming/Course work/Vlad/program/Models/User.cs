@@ -2,9 +2,14 @@ namespace EquipmentAccounting.Models;
 
 public class User
 {
+    // Индивидуальный идентификатор
     public int Id { get; set; }
+    // Логин
     public string Username { get; set; } = "";
+    // Пароль в hash-виде
     public string PasswordHash { get; set; } = "";
-    public string Role { get; set; } = "Сотрудник"; // Администратор / Менеджер / Сотрудник
+    // Роль
+    public string Role { get; set; } = "Сотрудник";
+    // ФИО
     public string FullName { get; set; } = "";
 }

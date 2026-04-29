@@ -82,11 +82,11 @@ public partial class Form1 : Form
             Padding = new Padding(5)
         };
 
-        btnAdd = CreateButton("＋ Добавить", Color.SeaGreen, 5);
-        btnEdit = CreateButton("✎ Редактировать", Color.SteelBlue, 130);
-        btnDelete = CreateButton("✕ Удалить", Color.IndianRed, 285);
-        btnHistory = CreateButton("📋 История", Color.SlateGray, 390);
-        btnRefresh = CreateButton("↺ Обновить", Color.Gray, 495);
+        btnAdd = CreateButton("Добавить", Color.SeaGreen, 5);
+        btnEdit = CreateButton("Редактировать", Color.SteelBlue, 130);
+        btnDelete = CreateButton("Удалить", Color.IndianRed, 285);
+        btnHistory = CreateButton("История", Color.SlateGray, 390);
+        btnRefresh = CreateButton("Обновить", Color.Gray, 495);
 
         btnAdd.Click += BtnAdd_Click;
         btnEdit.Click += BtnEdit_Click;

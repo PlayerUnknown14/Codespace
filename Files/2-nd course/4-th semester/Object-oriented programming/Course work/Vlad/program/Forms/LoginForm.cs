@@ -10,6 +10,7 @@ public class LoginForm : Form
     private TextBox txtUsername, txtPassword;
     private Button btnLogin;
 
+    // Холдер для вошедшего пользователя
     public User? LoggedInUser { get; private set; }
 
     public LoginForm()
@@ -54,6 +55,7 @@ public class LoginForm : Form
         // Нажатие Enter вместо кнопки
         this.AcceptButton = btnLogin;
 
+        // Добавляем все элементы на форму
         this.Controls.AddRange(new Control[]
         {
             lblTitle, lblUsername, txtUsername,
@@ -61,6 +63,7 @@ public class LoginForm : Form
         });
     }
 
+    // Обработчик кнопки "Войти"
     private void BtnLogin_Click(object? sender, EventArgs e)
     {
         var username = txtUsername.Text.Trim();
@@ -90,6 +93,7 @@ public class LoginForm : Form
             return;
         }
 
+        // Все проверки пройдены - пускаем юзера
         LoggedInUser = user;
         this.DialogResult = DialogResult.OK;
         this.Close();
