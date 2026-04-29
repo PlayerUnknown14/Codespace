@@ -37,7 +37,7 @@ class TextAnalyzer:
         # Энтропия источника H(X)
         self.hx = -sum(p * math.log2(p) for p in self.probs.values() if p > 0)
         # Условная энтропия H(Y|X) через биграммы
-        pairs = [text[i:i+2] for i in range(len(text)-1)]
+        pairs = [text[i:i+2] for i in range(0, len(text) - 1, 2)]
         pair_counts = Counter(pairs)
         h_xy = -sum(c/(self.text_length-1) * math.log2(c/(self.text_length-1)) for c in pair_counts.values() if c > 0)
         self.hyx = h_xy - self.hx
