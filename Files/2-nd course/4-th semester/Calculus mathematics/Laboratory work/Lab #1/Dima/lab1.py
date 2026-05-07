@@ -1,6 +1,6 @@
 import numpy as np
 
-def solve_gauss_with_pivoting(A_orig, f_orig):
+def solve_gauss(A_orig, f_orig):
     """
     Решение СЛАУ методом Гаусса с выбором главного элемента по столбцам.
     """
@@ -111,7 +111,7 @@ print("--- РЕЗУЛЬТАТЫ ЛАБОРАТОРНОЙ РАБОТЫ №1 ---")
 print(f"Вариант: 12\n")
 
 # 1. Метод Гаусса
-U_gauss = solve_gauss_with_pivoting(A, f)
+U_gauss = solve_gauss(A, f)
 print("1. Результат метода Гаусса (вектор U):")
 print(U_gauss)
 print("-" * 40)
