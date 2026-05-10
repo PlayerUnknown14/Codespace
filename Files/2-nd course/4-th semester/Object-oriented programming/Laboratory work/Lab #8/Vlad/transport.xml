@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Transport>
+  <Vehicle>
+    <Name>BMW 5 Series</Name>
+    <Type>Легковой</Type>
+    <Year>2021</Year>
+    <MaxSpeed>250</MaxSpeed>
+    <Engine>2.0</Engine>
+    <Fuel>7.5</Fuel>
+    <Tank>68</Tank>
+  </Vehicle>
+  <Vehicle>
+    <Name>КамАЗ-5490</Name>
+    <Type>Грузовой</Type>
+    <Year>2019</Year>
+    <MaxSpeed>120</MaxSpeed>
+    <Engine>11.9</Engine>
+    <Fuel>28.0</Fuel>
+    <Tank>400</Tank>
+  </Vehicle>
+  <Vehicle>
+    <Name>Toyota Corolla</Name>
+    <Type>Легковой</Type>
+    <Year>2020</Year>
+    <MaxSpeed>185</MaxSpeed>
+    <Engine>1.8</Engine>
+    <Fuel>6.0</Fuel>
+    <Tank>50</Tank>
+  </Vehicle>
+  <Vehicle>
+    <Name>Лиаз-5292</Name>
+    <Type>Автобус</Type>
+    <Year>2018</Year>
+    <MaxSpeed>90</MaxSpeed>
+    <Engine>6.7</Engine>
+    <Fuel>35.0</Fuel>
+    <Tank>250</Tank>
+  </Vehicle>
+  <Vehicle>
+    <Name>Газель Next</Name>
+    <Type>Грузовой</Type>
+    <Year>2022</Year>
+    <MaxSpeed>140</MaxSpeed>
+    <Engine>2.8</Engine>
+    <Fuel>12.5</Fuel>
+    <Tank>90</Tank>
+  </Vehicle>
+  <Vehicle>
+    <Name>Volkswagen Transporter</Name>
+    <Type>Микроавтобус</Type>
+    <Year>2023</Year>
+    <MaxSpeed>190</MaxSpeed>
+    <Engine>2.0</Engine>
+    <Fuel>8.9</Fuel>
+    <Tank>70</Tank>
+  </Vehicle>
+  <Vehicle>
+    <Name>Урал-4320</Name>
+    <Type>Грузовой</Type>
+    <Year>2017</Year>
+    <MaxSpeed>85</MaxSpeed>
+    <Engine>14.9</Engine>
+    <Fuel>48.0</Fuel>
+    <Tank>300</Tank>
+  </Vehicle>
+</Transport>
