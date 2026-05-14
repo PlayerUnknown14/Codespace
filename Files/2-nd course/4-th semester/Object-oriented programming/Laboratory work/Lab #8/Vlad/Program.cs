@@ -9,8 +9,7 @@ namespace Lab8_Var5
         private DataGridView dgv = new DataGridView { Dock = DockStyle.Top, Height = 280 };
         private TextBox txtSearch = new TextBox { Location = new Point(10, 290), Width = 220, PlaceholderText = "Наименование или год" };
         private Button btnSearch = new Button { Text = "Поиск", Location = new Point(240, 288), Width = 80 };
-        private Button btnSort   = new Button { Text = "По году ↑", Location = new Point(330, 288), Width = 90 };
-        private Button btnReset  = new Button { Text = "Сбросить", Location = new Point(430, 288), Width = 90 };
+        private Button btnReset = new Button { Text = "Сбросить", Location = new Point(330, 288), Width = 90 };
 
         private DataSet ds = new DataSet();
 
@@ -18,18 +17,11 @@ namespace Lab8_Var5
         {
             Text = "Транспорт — вариант 5";
             Width = 760; Height = 370;
-            Controls.AddRange(new Control[] { dgv, txtSearch, btnSearch, btnSort, btnReset });
+            Controls.AddRange(new Control[] { dgv, txtSearch, btnSearch, btnReset });
 
-            if (File.Exists("transport.xml"))
-            {
-                ds.ReadXml("transport.xml");
-                dgv.DataSource = ds.Tables[0];
-                SetHeaders();
-            }
-            else
-            {
-                MessageBox.Show("Файл transport.xml не найден рядом с exe.");
-            }
+            ds.ReadXml("transport.xml");
+            dgv.DataSource = ds.Tables[0];
+            SetHeaders();
 
             btnSearch.Click += (s, e) =>
             {
@@ -37,12 +29,6 @@ namespace Lab8_Var5
                 ds.Tables[0].DefaultView.RowFilter = string.IsNullOrEmpty(f)
                     ? ""
                     : $"Name LIKE '%{f}%' OR Year LIKE '%{f}%'";
-                dgv.DataSource = ds.Tables[0].DefaultView;
-            };
-
-            btnSort.Click += (s, e) =>
-            {
-                ds.Tables[0].DefaultView.Sort = "Year ASC";
                 dgv.DataSource = ds.Tables[0].DefaultView;
             };
 
@@ -59,7 +45,7 @@ namespace Lab8_Var5
         {
             if (dgv.Columns.Count < 7) return;
             string[] headers = { "Наименование", "Тип", "Год выпуска", "Макс. скорость", "Объём двигателя", "Расход (л/100км)", "Объём бака (л)" };
-            int[]    widths  = { 170, 110, 90, 110, 120, 130, 110 };
+            int[] widths = { 170, 110, 90, 110, 120, 130, 110 };
             for (int i = 0; i < headers.Length; i++)
             {
                 dgv.Columns[i].HeaderText = headers[i];
