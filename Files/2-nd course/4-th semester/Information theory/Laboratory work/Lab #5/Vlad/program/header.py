@@ -1,7 +1,7 @@
 import math
 import random
 
-class HammingCoder:
+class LinearGroupCoder:
     def __init__(self, num_messages):
         """Инициализация параметров кода Хемминга. 256 сообщений для 5 варианта."""
         self.n_i = int(math.log2(num_messages)) # количество информационных разрядов
@@ -10,75 +10,96 @@ class HammingCoder:
         while (2 ** self.n_k) < (self.n_i + self.n_k + 1):
             self.n_k += 1
         self.n = self.n_i + self.n_k # длина классического кода Хемминга (разрядность кода)
-        self.n_ext = self.n + 1 # длина расширенного кода Хемминга
+        # Построение матрицы П (Проверочная часть порождающей матрицы G)
+        # Правило: Вес каждой строки матрицы П должен быть >= d_min - 1 (то есть >= 2).
+        # Нам нужно 8 уникальных строк длиной 4 бита с минимум двумя единицами.
+        self.P = [
+            [0, 0, 1, 1], # 1
+            [0, 1, 0, 1], # 2
+            [0, 1, 1, 0], # 3
+            [1, 0, 0, 1], # 4
+            [1, 0, 1, 0], # 5
+            [1, 1, 0, 0], # 6
+            [0, 1, 1, 1], # 7
+            [1, 0, 1, 1]  # 8
+        ]
 
     def generate_data_string(self):
         """Генерация случайной последовательности данных."""
         return "".join(random.choice("01") for _ in range(self.n_i))
 
     def encode(self, data_string):
-        """Кодирование информационной строки расширенным кодом Хемминга."""
-        # Массив для формирования кода (индексация с 1 для удобства степеней двойки)
-        code = [0] * (self.n + 1)
-        # Расставляем информационные биты на позиции, не являющиеся степенями 2
-        j = 0
-        for i in range(1, self.n + 1):
-            if (i & (i - 1)) != 0:
-                code[i] = int(data_string[j])
-                j += 1
-        # Расставляем контрольные биты на остальные позиции
-        for i in range(self.n_k):
-            pos = 2 ** i
-            parity = 0
-            for k in range(1, self.n + 1):
-                # Если в позиции k бит, проверяемый текущим контрольным разрядом, равен 1
-                if (k & pos) != 0:
-                    parity ^= code[k] # XOR сумма
-            code[pos] = parity
-        # Вычисляем общий бит чётности для расширенного кода (сумма всех бит)
-        parity_bit = sum(code[1:]) % 2
-        # Формируем итоговую строку (исключаем нулевой индекс)
-        result = "".join(map(str, code[1:])) + str(parity_bit)
-        return result
+        """
+        Кодирование ЛГК.
+        Вектор V = U * G, где G = [ I | P ].
+        Результат: сначала идут информационные биты, затем контрольные.
+        """
+        u = [int(bit) for bit in data_string]
+        
+        # Информационная часть (единичная матрица I просто переносит биты)
+        code = u.copy()
+        
+        # Проверочная часть (умножение вектора U на матрицу П по модулю 2)
+        for j in range(self.n_k):
+            # Суммируем (XOR) элементы столбца j матрицы P, если соответствующий бит u[i] == 1
+            check_bit = sum(u[i] * self.P[i][j] for i in range(self.n_i)) % 2
+            code.append(check_bit)
+            
+        return "".join(map(str, code))
 
     def decode(self, code_str):
-        """Декодирование кодовой строки с проверкой на наличие одиночных и двойных ошибок."""
-        # Преобразуем строку в список чисел (первый элемент фиктивный для 1-индексации)
-        code = [0] + [int(x) for x in code_str[:-1]]
-        parity_bit = int(code_str[-1]) # бит чётности
+        """
+        Декодирование ЛГК и исправление одиночной ошибки через Синдром.
+        Вектор синдрома S = V_прин * H^T.
+        """
+        v = [int(bit) for bit in code_str]
+        
+        # Извлекаем принятые информационные и контрольные биты
+        u_recv = v[:self.n_i]
+        c_recv = v[self.n_i:]
+        
+        # Вычисляем Синдром. 
+        # S_j = (сумма(u_recv[i] * P[i][j]) + c_recv[j]) mod 2
+        syndrome = []
+        for j in range(self.n_k):
+            s_bit = (sum(u_recv[i] * self.P[i][j] for i in range(self.n_i)) + c_recv[j]) % 2
+            syndrome.append(s_bit)
+            
         status = ""
-        corrected_code = code.copy()
-        corrected_overall = parity_bit        
-        # Проверка общей чётности
-        current_overall_parity = (sum(code[1:]) + parity_bit) % 2
-        # Вычисление синдрома
-        syndrome = 0
-        for i in range(self.n_k):
-            pos = 2 ** i
-            parity = 0
-            for k in range(1, self.n + 1):
-                if (k & pos) != 0:
-                    parity ^= code[k]
-            if parity != 0:
-                syndrome += pos # Накапливаем номер ошибочного бита
-        # Принятие решения по теореме Хемминга
-        # Ошибка исправляется инверсией бита
-        if current_overall_parity == 0:
-            if syndrome == 0:
-                status = "Ошибок нет."
-            else:
-                status = f"Двойная ошибка (синдром = {syndrome}). Исправление невозможно."
+        corrected_code = v.copy()
+        
+        # Анализ синдрома
+        if all(bit == 0 for bit in syndrome):
+            status = "Ошибок нет."
         else:
-            if syndrome == 0:
-                status = "Одиночная ошибка в общем бите чётности. Исправление выполнено."
-                corrected_overall ^= 1
+            # Ищем, какому столбцу проверочной матрицы H соответствует синдром.
+            # Матрица H = [ P^T | I ]. Ее столбцы — это строки P и строки единичной матрицы.
+            
+            error_pos = -1
+            
+            # Проверяем информационную часть (совпадает ли синдром со строкой матрицы P)
+            for i in range(self.n_i):
+                if self.P[i] == syndrome:
+                    error_pos = i
+                    break
+            
+            # Проверяем контрольную часть (совпадает ли синдром с единичной матрицей)
+            if error_pos == -1:
+                for j in range(self.n_k):
+                    # Генерируем столбец единичной матрицы
+                    i_col = [1 if k == j else 0 for k in range(self.n_k)]
+                    if i_col == syndrome:
+                        error_pos = self.n_i + j
+                        break
+            
+            if error_pos != -1:
+                status = f"Одиночная ошибка в позиции {error_pos + 1}. Исправление выполнено."
+                corrected_code[error_pos] ^= 1 # Инвертируем ошибочный бит
             else:
-                status = f"Одиночная ошибка в позиции {syndrome}. Исправление выполнено."
-                corrected_code[syndrome] ^= 1
+                status = f"Неизвестный синдром {syndrome}. Множественная ошибка!"
+
         # Извлечение информационной части из исправленного кода
-        data = ""
-        for i in range(1, self.n + 1):
-            if (i & (i - 1)) != 0:
-                data += str(corrected_code[i])
-        final_code_str = "".join(map(str, corrected_code[1:])) + str(corrected_overall)
+        data = "".join(map(str, corrected_code[:self.n_i]))
+        final_code_str = "".join(map(str, corrected_code))
+        
         return status, final_code_str, data
