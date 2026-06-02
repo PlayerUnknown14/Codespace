@@ -28,7 +28,6 @@ def main():
             print(f"Количество сообщений (N): {256}")
             print(f"Информационных разрядов (n_и): {coder.n_i}")
             print(f"Контрольных разрядов (n_к): {coder.n_k}")
-            print(f"Общая длина кода (n): {coder.n}")
             print("\nПорождающая матрица G = [ I | P ]:")
             # Выводим матрицу G для наглядности (I - единичная 8x8, P - 8x4)
             for i in range(coder.n_i):
@@ -40,10 +39,9 @@ def main():
             print("\n" + "="*40)
             print("ПОСТРОЕНИЕ 10 СЛУЧАЙНЫХ СООБЩЕНИЙ")
             print("="*40)
-            print(f"{'№':<3} | {'Инфо-данные':<12} | {'Систематический ЛГК (Инфо + Проверка)'}")
-            print("-" * 65)
+            print(f"{'№':<3} | {'Инфо-данные':<12} | {'ЛГК (Инфо + Проверка)'}")
+            print("-" * 40)
             for i in range(1, 11):
-                # Генерируем случайную 8-битную строку
                 data = coder.generate_data_string()
                 encoded = coder.encode(data)
                 formatted_encoded = f"{encoded[:coder.n_i]} {encoded[coder.n_i:]}"
@@ -61,7 +59,7 @@ def main():
             err_input = input("\nУкажите позицию для внесения ошибки (от 1 до 12): ").strip()               
             err_pos = int(err_input)
             received = simulate_error(encoded, err_pos)
-            print(f"\nПолученный из канала код (с ошибками): {received}")
+            print(f"\nПолученный из канала код (с ошибкой): {received}")
             
             status, corrected, decoded_data = coder.decode(received)
             print(f"\nСтатус декодирования: {status}")
