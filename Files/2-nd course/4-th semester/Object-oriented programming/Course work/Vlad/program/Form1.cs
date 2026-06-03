@@ -2,6 +2,7 @@ using EquipmentAccounting.Data;
 using EquipmentAccounting.Models;
 using EquipmentAccounting.Forms;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace EquipmentAccounting;
 
@@ -13,6 +14,8 @@ public partial class Form1 : Form
     private TextBox txtSearch;
     private Label lblSearch, lblWelcome;
     private ComboBox cmbStatusFilter;
+    private string _sortColumn = "";
+    private bool _sortAscending = true;
 
     public Form1()
     {
@@ -124,6 +127,7 @@ public partial class Form1 : Form
         dgvEquipment.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
         dgvEquipment.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9, FontStyle.Bold);
         dgvEquipment.EnableHeadersVisualStyles = false;
+        dgvEquipment.ColumnHeaderMouseClick += DgvEquipment_ColumnHeaderMouseClick;
 
         this.Controls.Add(dgvEquipment);
         this.Controls.Add(panelButtons);
@@ -149,37 +153,87 @@ public partial class Form1 : Form
         using var db = new AppDbContext();
         var query = db.Equipments.AsQueryable();
 
-        // Фильтр по статусу
+        // Фильтр по статусу в БД
         if (cmbStatusFilter.SelectedItem?.ToString() != "Все")
             query = query.Where(e => e.Status == cmbStatusFilter.SelectedItem!.ToString());
 
-        // Поиск
-        var search = txtSearch.Text.Trim().ToLower();
-        if (!string.IsNullOrEmpty(search))
-            query = query.Where(e =>
-                e.Name.ToLower().Contains(search) ||
-                e.InventoryNumber.ToLower().Contains(search) ||
-                (e.ResponsiblePerson != null && e.ResponsiblePerson.ToLower().Contains(search)) ||
-                (e.Department != null && e.Department.ToLower().Contains(search)));
-
+        // Загружаем в память и сортируем
         var list = query.OrderByDescending(e => e.DateAdded).ToList();
 
-        dgvEquipment.DataSource = list.Select(e => new
+        // Поиск по всем полям (в памяти)
+        var search = txtSearch.Text.Trim().ToLower();
+        if (!string.IsNullOrEmpty(search))
+            list = list.Where(e => SearchInEquipment(e, search)).ToList();
+
+        // Преобразуем в список EquipmentRow
+        var rows = list.Select(e => new EquipmentRow
         {
-            e.Id,
-            Название = e.Name,
-            Инв_номер = e.InventoryNumber,
-            Категория = e.Category,
-            Статус = e.Status,
+            Id           = e.Id,
+            Название     = e.Name,
+            Инв_номер    = e.InventoryNumber,
+            Категория    = e.Category,
+            Статус       = e.Status,
             Ответственный = e.ResponsiblePerson ?? "—",
             Подразделение = e.Department ?? "—",
-            Добавлено = e.DateAdded.ToString("dd.MM.yyyy")
+            Добавлено    = e.DateAdded.ToString("dd.MM.yyyy")
         }).ToList();
 
-        // Скрываем колонку Id
+        // Применяем сортировку
+        rows = SortRows(rows);
+
+        dgvEquipment.DataSource = new BindingList<EquipmentRow>(rows);
+
         if (dgvEquipment.Columns.Contains("Id"))
             dgvEquipment.Columns["Id"]!.Visible = false;
     }
+
+    private List<EquipmentRow> SortRows(List<EquipmentRow> rows)
+    {
+        if (string.IsNullOrEmpty(_sortColumn))
+            return rows;
+
+        return _sortColumn switch
+        {
+            "Название" => _sortAscending
+                ? rows.OrderBy(r => r.Название).ToList()
+                : rows.OrderByDescending(r => r.Название).ToList(),
+            "Инв_номер" => _sortAscending
+                ? rows.OrderBy(r => r.Инв_номер).ToList()
+                : rows.OrderByDescending(r => r.Инв_номер).ToList(),
+            "Категория" => _sortAscending
+                ? rows.OrderBy(r => r.Категория).ToList()
+                : rows.OrderByDescending(r => r.Категория).ToList(),
+            "Статус" => _sortAscending
+                ? rows.OrderBy(r => r.Статус).ToList()
+                : rows.OrderByDescending(r => r.Статус).ToList(),
+            "Ответственный" => _sortAscending
+                ? rows.OrderBy(r => r.Ответственный).ToList()
+                : rows.OrderByDescending(r => r.Ответственный).ToList(),
+            "Подразделение" => _sortAscending
+                ? rows.OrderBy(r => r.Подразделение).ToList()
+                : rows.OrderByDescending(r => r.Подразделение).ToList(),
+            "Добавлено" => _sortAscending
+                ? rows.OrderBy(r => r.Добавлено).ToList()
+                : rows.OrderByDescending(r => r.Добавлено).ToList(),
+            _ => rows
+        };
+    }
+
+    private bool SearchInEquipment(Equipment e, string searchLower)
+    {
+        return ContainsSearch(e.Name, searchLower) ||
+            ContainsSearch(e.InventoryNumber, searchLower) ||
+            ContainsSearch(e.Category, searchLower) ||
+            ContainsSearch(e.Status, searchLower) ||
+            ContainsSearch(e.SerialNumber, searchLower) ||
+            ContainsSearch(e.ResponsiblePerson, searchLower) ||
+            ContainsSearch(e.Department, searchLower) ||
+            ContainsSearch(e.Notes, searchLower) ||
+            ContainsSearch(e.Id.ToString(), searchLower);
+    }
+
+    private bool ContainsSearch(string? value, string search)
+        => !string.IsNullOrEmpty(value) && value.ToLower().Contains(search);
 
     private Equipment? GetSelectedEquipment()
     {
@@ -233,4 +287,33 @@ public partial class Form1 : Form
     {
         new HistoryForm().ShowDialog();
     }
+
+    private void DgvEquipment_ColumnHeaderMouseClick(object? sender, DataGridViewCellMouseEventArgs e)
+    {
+        var columnName = dgvEquipment.Columns[e.ColumnIndex].Name;
+        if (columnName == "Id") return;
+
+        // Если кликнули на ту же колонку, меняем направление сортировки
+        if (_sortColumn == columnName)
+            _sortAscending = !_sortAscending;
+        else
+        {
+            _sortColumn = columnName;
+            _sortAscending = true;
+        }
+
+        LoadEquipment();
+    }
+}
+
+public class EquipmentRow
+{
+    public int Id { get; set; }
+    public string Название { get; set; } = "";
+    public string Инв_номер { get; set; } = "";
+    public string Категория { get; set; } = "";
+    public string Статус { get; set; } = "";
+    public string Ответственный { get; set; } = "";
+    public string Подразделение { get; set; } = "";
+    public string Добавлено { get; set; } = "";
 }
