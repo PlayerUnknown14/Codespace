@@ -1,53 +1,80 @@
-import math
-import re
+import numpy as np, math
 from collections import Counter
+import re
 
-def solve_task_2(file_name):
-    try:
-        with open(file_name, 'r', encoding='utf-8') as f:
-            raw_text = f.read()
-    except UnicodeDecodeError:
-        with open(file_name, 'r', encoding='cp1251') as f:
-            raw_text = f.read()
+# Чтение и очистка текста
+with open('input.txt', 'r', encoding='utf-8') as f:
+    text = re.sub(r'[^а-яё\s]', '', f.read().lower())
+    text = re.sub(r'\s+', ' ', text).strip()
 
-    text = raw_text.lower()
-    text = text.replace('ё', 'е')
-    text = text.replace('ъ', 'ь')
-    allowed_chars = "абвгдежзийклмнопрстуфхцчшщыьэюя "
-    filtered_text = "".join([char for char in text if char in allowed_chars])
+# Алфавит: список уникальных символов тек   ста, отсортированный
+# Например: [' ', 'а', 'б', 'в', ...]
+alphabet = sorted(set(text))
+n = len(alphabet)  # количество уникальных символов (например, 32)
 
-    total_len = len(filtered_text)
-    if total_len == 0:
-        return "Файл пуст или не содержит русских букв."
-    
-    N = len(text)
-    if N == 0:
-        return 0, 0, 0
-    
-    #вероятности одиночных букв p(x)
-    char_counts = Counter(text)
-    h_x = 0
-    for char in char_counts:
-        p_x = char_counts[char] / N
-        h_x -= p_x * math.log2(p_x)
-        
-    #вероятности биграмм p(x, y)
-    bigrams = [text[i:i+2] for i in range(len(text) - 1)]
-    N_bg = len(bigrams)
-    bg_counts = Counter(bigrams)
-    
-    h_xy = 0
-    for bg in bg_counts:
-        p_xy = bg_counts[bg] / N_bg
-        h_xy -= p_xy * math.log2(p_xy)
-        
-    #условная энтропия по теореме сложения
-    h_y_cond_x = h_xy - h_x
-    
-    return h_x, h_xy, h_y_cond_x
+# Словарь "символ → индекс": {' ': 0, 'а': 1, 'б': 2, ...}
+# Нужен для перевода букв в числа, чтобы работать с матрицей
+ch2i = {c: i for i, c in enumerate(alphabet)}
 
-hx, hxy, hyx = solve_task_2('input.txt')
+# НЕПЕРЕКРЫВАЮЩИЕСЯ биграммы: "голова" → "го", "ло", "ва"
+# Берём пары символов с шагом 2: (0,1), (2,3), (4,5), ...
+# text[i] — первая буква пары (X), text[i+1] — вторая (Y)
+bigrams = []
+for i in range(0, len(text) - 1, 2):  # шаг 2 — пары не перекрываются
+    x = ch2i[text[i]]      # индекс первой буквы в алфавите
+    y = ch2i[text[i + 1]]  # индекс второй буквы в алфавите
+    bigrams.append((x, y))
 
-print(f"Энтропия одного символа H(X): {hx:.4f} бит")
-print(f"Совместная энтропия биграммы H(X,Y): {hxy:.4f} бит")
-print(f"Условная энтропия H(Y|X): {hyx:.4f} бит")
+# Матрица совместных вероятностей P(X,Y) размером n×n
+# Строка i = символ X, столбец j = символ Y
+# Элемент [i,j] = сколько раз встретилась пара (X=i, Y=j)
+P_joint = np.zeros((n, n))
+for x, y in bigrams:
+    P_joint[x, y] += 1
+P_joint /= P_joint.sum()  # делим на сумму → получаем вероятности
+
+# Маргинальные вероятности
+P_x = P_joint.sum(axis=1)  # P(X): сумма по столбцам = вероятности первых букв
+P_y = P_joint.sum(axis=0)  # P(Y): сумма по строкам = вероятности вторых букв
+
+# Канальная матрица со стороны источника P(Y|X)
+# P(y_j|x_i) = P(x_i, y_j) / P(x_i)
+# Каждая строка = условные вероятности для фиксированного x_i
+P_Yx = np.zeros((n, n))
+for i in range(n):
+    if P_x[i] > 0:
+        P_Yx[i] = P_joint[i] / P_x[i]
+
+# Канальная матрица со стороны приёмника P(X|Y)
+# P(x_i|y_j) = P(x_i, y_j) / P(y_j)
+# Каждый столбец = условные вероятности для фиксированного y_j
+P_Xy = np.zeros((n, n))
+for j in range(n):
+    if P_y[j] > 0:
+        P_Xy[:, j] = P_joint[:, j] / P_y[j]
+
+# Энтропия H(X,Y) = -sum(p_ij * log2(p_ij))
+H_XY = -sum(p * math.log2(p) for p in P_joint.flat if p > 0)
+
+# Условная энтропия H(Y|X) через канальную матрицу P(Y|X)
+# H(Y|X) = sum(P(x_i) * H(Y|x_i))
+# H(Y|x_i) = -sum(P(y_j|x_i) * log2(P(y_j|x_i)))
+H_Yx = 0
+for i in range(n):
+    if P_x[i] > 0:
+        h = sum(-p * math.log2(p) for p in P_Yx[i] if p > 0)
+        H_Yx += P_x[i] * h
+
+# Энтропии отдельных символов
+H_X = sum(-p * math.log2(p) for p in P_x if p > 0)
+H_Y = sum(-p * math.log2(p) for p in P_y if p > 0)
+
+# H(X|Y) через теорему сложения
+H_Xy = H_XY - H_Y
+
+print(f"H(X,Y) = {H_XY:.4f} бит/сим")
+print(f"H(Y|X) = {H_Yx:.4f} бит/сим")
+print(f"H(X)   = {H_X:.4f} бит/сим")
+print(f"H(Y)   = {H_Y:.4f} бит/сим")
+print(f"H(X|Y) = {H_Xy:.4f} бит/сим")
+print(f"Проверка: H(X)+H(Y|X) = {H_X + H_Yx:.4f} ≈ H(X,Y)")

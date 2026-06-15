@@ -1,182 +1,186 @@
+import numpy as np
 import math
-import re
 from collections import Counter
+import re
+import heapq
 
-def get_filtered_text(file_name):
-    try:
-        with open(file_name, 'r', encoding='utf-8') as f:
-            raw_text = f.read()
-    except:
-        with open(file_name, 'r', encoding='cp1251') as f:
-            raw_text = f.read()
-    
-    text = raw_text.lower()
-    text = text.replace('ё', 'е').replace('ъ', 'ь')
-    # Добавляем \n, чтобы сохранить структуру абзацев для Задания 4
-    allowed_chars = "абвгдежзийклмнопрстуфхцчшщыьэюя \n"
-    return "".join([char for char in text if char in allowed_chars])
+# ============================================================
+# ЧТЕНИЕ И ПОДГОТОВКА ТЕКСТА
+# ============================================================
 
-def get_shannon_fano_codes(probs_list):
-    if len(probs_list) == 1:
-        return {probs_list[0][0]: ""}
+with open('input.txt', 'r', encoding='utf-8') as f:
+    text = f.read()
+
+# Оставляем только русские буквы и пробелы
+text_clean = re.sub(r'[^а-яА-ЯёЁ\s]', '', text.lower())
+text_clean = re.sub(r'\s+', ' ', text_clean).strip()
+
+# Подсчёт частот символов
+char_counts = Counter(text_clean)
+total_chars = len(text_clean)
+probs = {ch: count / total_chars for ch, count in char_counts.items()}
+
+# Алфавит
+alphabet = sorted(char_counts.keys())
+n = len(alphabet)
+
+# ============================================================
+# ЗАДАНИЕ 1: ИЗБЫТОЧНОСТЬ
+# ============================================================
+
+# H1(X) - энтропия по отдельным символам
+H1 = -sum(p * math.log2(p) for p in probs.values() if p > 0)
+H_max = math.log2(n)
+D_p = 1 - H1 / H_max
+
+# H2(X) - энтропия по биграммам
+bigrams = [(text_clean[i], text_clean[i+1]) for i in range(len(text_clean)-1)]
+bigram_counts = Counter(bigrams)
+total_bigrams = len(bigrams)
+bigram_probs = {bg: count / total_bigrams for bg, count in bigram_counts.items()}
+
+H2_joint = -sum(p * math.log2(p) for p in bigram_probs.values() if p > 0)
+H2_cond = H2_joint - H1  # H(Y|X)
+D_s = 1 - H2_cond / H1
+D = 1 - H2_cond / H_max
+
+print(f"H1(X) = {H1:.4f} бит/сим")
+print(f"D_p = {D_p:.4f} ({D_p*100:.2f}%)")
+print(f"H(Y|X) = {H2_cond:.4f} бит/сим")
+print(f"D_s = {D_s:.4f} ({D_s*100:.2f}%)")
+print(f"D = {D:.4f} ({D*100:.2f}%)")
+
+# ============================================================
+# ЗАДАНИЕ 2: МЕТОД ШЕННОНА-ФАНО
+# ============================================================
+
+sorted_chars = sorted(probs.keys(), key=lambda x: -probs[x])
+sorted_probs = [probs[ch] for ch in sorted_chars]
+
+def shannon_fano(chars, probs):
+    if len(chars) == 1:
+        return {chars[0]: ''}
     
-    # Поиск точки разделения для минимальной разницы сумм вероятностей
-    split_idx = 0
-    total_sum = sum(p for c, p in probs_list)
-    acc = 0
-    min_diff = total_sum
+    total = sum(probs)
+    half = total / 2
     
-    for i in range(len(probs_list)):
-        acc += probs_list[i][1]
-        diff = abs(acc - (total_sum - acc))
-        if diff < min_diff:
-            min_diff = diff
-            split_idx = i + 1
-        else:
-            break
-            
+    best_split = 1
+    best_diff = abs(sum(probs[:1]) - half)
+    
+    for i in range(2, len(probs)):
+        diff = abs(sum(probs[:i]) - half)
+        if diff < best_diff:
+            best_diff = diff
+            best_split = i
+    
+    left = shannon_fano(chars[:best_split], probs[:best_split])
+    right = shannon_fano(chars[best_split:], probs[best_split:])
+    
     codes = {}
-    # Рекурсивное построение кодов
-    left_part = get_shannon_fano_codes(probs_list[:split_idx])
-    right_part = get_shannon_fano_codes(probs_list[split_idx:])
-    
-    for char in left_part: codes[char] = "0" + left_part[char]
-    for char in right_part: codes[char] = "1" + right_part[char]
+    for ch, code in left.items():
+        codes[ch] = '0' + code
+    for ch, code in right.items():
+        codes[ch] = '1' + code
     return codes
 
-class Node:
-    def __init__(self, char, prob, left=None, right=None):
+sf_codes = shannon_fano(sorted_chars, sorted_probs)
+
+# ============================================================
+# ЗАДАНИЕ 2: МЕТОД ХАФФМАНА
+# ============================================================
+
+class HuffmanNode:
+    def __init__(self, char, prob):
         self.char = char
         self.prob = prob
-        self.left = left
-        self.right = right
-
-def build_huffman(probs_list):
-    nodes = [Node(c, p) for c, p in probs_list]
-    while len(nodes) > 1:
-        nodes.sort(key=lambda x: x.prob)
-        left = nodes.pop(0)
-        right = nodes.pop(0)
-        parent = Node(None, left.prob + right.prob, left, right)
-        nodes.append(parent)
+        self.left = None
+        self.right = None
     
-    code_map = {}
-    def generate_codes(node, current_code=""):
-        if node:
-            if node.char:
-                code_map[node.char] = current_code
-            generate_codes(node.left, current_code + "0")
-            generate_codes(node.right, current_code + "1")
+    def __lt__(self, other):
+        return self.prob < other.prob
+
+def build_huffman_tree(chars, probs):
+    heap = [HuffmanNode(ch, p) for ch, p in zip(chars, probs)]
+    heapq.heapify(heap)
     
-    generate_codes(nodes[0])
-    return nodes[0], code_map
-
-def print_huffman_tree(node, indent=""):
-    if node:
-        if node.char:
-            char_repr = 'NL' if node.char == '\n' else node.char
-            print(f"{indent}└── '{char_repr}' ({node.prob:.4f})")
-        else:
-            print(f"{indent}├── Узел ({node.prob:.4f})")
-            print_huffman_tree(node.left, indent + "│   ")
-            print_huffman_tree(node.right, indent + "    ")
-
-def decode_text(encoded_str, codes):
-    reverse_codes = {v: k for k, v in codes.items()}
-    decoded = []
-    temp = ""
-    for bit in encoded_str:
-        temp += bit
-        if temp in reverse_codes:
-            decoded.append(reverse_codes[temp])
-            temp = ""
-    return "".join(decoded)
-
-
-if __name__ == "__main__":
-    text = get_filtered_text('input.txt')
-    n = len(text)
-    m = 32
-    h_max = math.log2(m)
-
-    # задание 1
-    counts = Counter(text)
-    p_dict = {c: count/n for c, count in counts.items()}
-    h_x = -sum(p * math.log2(p) for p in p_dict.values())
+    while len(heap) > 1:
+        left = heapq.heappop(heap)
+        right = heapq.heappop(heap)
+        merged = HuffmanNode(None, left.prob + right.prob)
+        merged.left = left
+        merged.right = right
+        heapq.heappush(heap, merged)
     
-    # Условная энтропия через биграммы
-    bigrams = [text[i:i+2] for i in range(n-1)]
-    h_xy = -sum((count/(n-1)) * math.log2(count/(n-1)) for count in Counter(bigrams).values())
-    h_yx = h_xy - h_x
+    return heap[0]
 
-    dp = 1 - (h_x / h_max)
-    ds = (h_x - h_yx) / h_max
-    d_total = 1 - (h_yx / h_max)
+def get_huffman_codes(node, prefix='', code_dict=None):
+    if code_dict is None:
+        code_dict = {}
+    if node.char is not None:
+        code_dict[node.char] = prefix if prefix else '0'
+        return code_dict
+    if node.left:
+        get_huffman_codes(node.left, prefix + '0', code_dict)
+    if node.right:
+        get_huffman_codes(node.right, prefix + '1', code_dict)
+    return code_dict
 
-    print("=== ЗАДАНИЕ 1: РАСЧЕТ ИЗБЫТОЧНОСТИ ===")
-    print(f"Энтропия H(X): {h_x:.4f}")
-    print(f"Избыточность Dp (неравновероятность): {dp:.4f}")
-    print(f"Избыточность Ds (стат. связи): {ds:.4f}")
-    print(f"Полная избыточность D: {d_total:.4f}\n")
+huff_tree = build_huffman_tree(sorted_chars, sorted_probs)
+huff_codes = get_huffman_codes(huff_tree)
 
-    # задание 2
-    probs_sorted = sorted(p_dict.items(), key=lambda x: x[1], reverse=True)
-    
-    # Шеннон-Фано
-    codes_sf = get_shannon_fano_codes(probs_sorted)
-    
-    # Хаффман
-    huff_root, codes_hf = build_huffman(probs_sorted)
-    
-    print("=== ЗАДАНИЕ 2: ВИЗУАЛИЗАЦИЯ ДЕРЕВА ХАФФМАНА ===")
-    print_huffman_tree(huff_root)
-    
-    print("\n=== ТАБЛИЦА КОДОВ ===")
-    print(f"{'Символ':<8} | {'Вер-ть':<8} | {'Шеннон-Фано':<12} | {'Хаффман':<12}")
-    for char, prob in probs_sorted:
-        c_disp = 'NEWLINE' if char == '\n' else f"'{char}'"
-        print(f"{c_disp:<8} | {prob:<8.4f} | {codes_sf[char]:<12} | {codes_hf[char]:<12}")
+# ============================================================
+# ЗАДАНИЕ 3: ПОКАЗАТЕЛИ ЭФФЕКТИВНОСТИ
+# ============================================================
 
-    # задание 3
-    def calc_metrics(codes, name):
-        l_cp = sum(p_dict[c] * len(codes[c]) for c in codes)
-        k_cc = 6 / l_cp 
-        k_oe = h_x / l_cp
-        print(f"\nМетрики {name}:")
-        print(f"  Средняя длина l_cp: {l_cp:.4f} бит/симв")
-        print(f"  Коэф. сжатия Kcc: {k_cc:.4f}")
-        print(f"  Коэф. эффективности Koe: {k_oe:.4f}")
+l_fixed = math.ceil(math.log2(n))
 
-    calc_metrics(codes_sf, "Шеннон-Фано")
-    calc_metrics(codes_hf, "Хаффман")
+l_avg_sf = sum(probs[ch] * len(sf_codes[ch]) for ch in alphabet)
+l_avg_huff = sum(probs[ch] * len(huff_codes[ch]) for ch in alphabet)
 
-    # задание 4: делим текст на абзацы и берем первые 4
-    paragraphs = [p.strip() for p in text.split('\n') if p.strip()]
-    if len(paragraphs) >= 4:
-        fragment = "\n\n".join(paragraphs[:4])
-        
-        print("\n=== ЗАДАНИЕ 4: ВЫДЕЛЕННЫЕ 4 АБЗАЦА ТЕКСТА ===")
-        print("-" * 50)
-        print(fragment)
-        print("-" * 50)
+K_cc_sf = l_fixed / l_avg_sf
+K_cc_huff = l_fixed / l_avg_huff
 
-        # 1. МЕТОД ХАФФМАНА
-        encoded_hf = "".join(codes_hf[c] for c in fragment)
-        decoded_hf = decode_text(encoded_hf, codes_hf)
-        
-        print(f"\n[МЕТОД ХАФФМАНА]")
-        print(f"Закодировано (первые 60 бит): {encoded_hf[:60]}...")
-        print(f"Общий объем: {len(encoded_hf)} бит")
-        print(f"Декодирование успешно: {decoded_hf == fragment}")
+K_oe_sf = H1 / l_avg_sf
+K_oe_huff = H1 / l_avg_huff
 
-        # 2. МЕТОД ШЕННОНА-ФАНО
-        encoded_sf = "".join(codes_sf[c] for c in fragment)
-        decoded_sf = decode_text(encoded_sf, codes_sf)
-        
-        print(f"\n[МЕТОД ШЕННОНА-ФАНО]")
-        print(f"Закодировано (первые 60 бит): {encoded_sf[:60]}...")
-        print(f"Общий объем: {len(encoded_sf)} бит")
-        print(f"Декодирование успешно: {decoded_sf == fragment}")
-        
-    else:
-        print("\nОшибка: В файле недостаточно абзацев.")
+print(f"\nШеннон-Фано: l_ср = {l_avg_sf:.4f}, K_сс = {K_cc_sf:.4f}, K_оэ = {K_oe_sf:.4f}")
+print(f"Хаффман:     l_ср = {l_avg_huff:.4f}, K_сс = {K_cc_huff:.4f}, K_оэ = {K_oe_huff:.4f}")
+
+# ============================================================
+# ЗАДАНИЕ 4: КОДИРОВАНИЕ И ДЕКОДИРОВАНИЕ
+# ============================================================
+
+sample = "слишком много желающих узнать наши реальные имена оборотень шумно втягивает воздух хмурится она пыталась тебя пометить я знаю не беспокойся это просто журналистка"
+
+# Шеннон-Фано
+encoded_sf = ''.join(sf_codes[ch] for ch in sample)
+sf_decode_map = {code: ch for ch, code in sf_codes.items()}
+
+def decode_sf(encoded):
+    decoded, buffer = [], ''
+    for bit in encoded:
+        buffer += bit
+        if buffer in sf_decode_map:
+            decoded.append(sf_decode_map[buffer])
+            buffer = ''
+    return ''.join(decoded)
+
+decoded_sf = decode_sf(encoded_sf)
+print(f"\nШеннон-Фано: совпадение = {sample == decoded_sf}")
+
+# Хаффман
+encoded_huff = ''.join(huff_codes[ch] for ch in sample)
+huff_decode_map = {code: ch for ch, code in huff_codes.items()}
+
+def decode_huff(encoded):
+    decoded, buffer = [], ''
+    for bit in encoded:
+        buffer += bit
+        if buffer in huff_decode_map:
+            decoded.append(huff_decode_map[buffer])
+            buffer = ''
+    return ''.join(decoded)
+
+decoded_huff = decode_huff(encoded_huff)
+print(decoded_huff)
+print(f"Хаффман:     совпадение = {sample == decoded_huff}")
